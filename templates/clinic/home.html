@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- Navigation -->
+<nav class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <div class="w-10 h-10 bg-blue-900 rounded-full flex items-center justify-center">
+                <span class="text-white font-bold text-lg">N</span>
+            </div>
+            <h1 class="text-2xl font-bold text-blue-900">NAPH Clinic</h1>
+        </div>
+        <div class="hidden md:flex space-x-6 items-center">
+            <a href="#services" class="text-slate-600 hover:text-blue-900 transition">Services</a>
+            <a href="#resources" class="text-slate-600 hover:text-blue-900 transition">Patient Forms</a>
+            <a href="/login" class="bg-blue-900 text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition">Client Login</a>
+        </div>
+        <div class="md:hidden">
+            <a href="/login" class="bg-blue-900 text-white px-4 py-2 rounded-lg text-sm">Login</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<header class="bg-gradient-to-br from-blue-900 via-blue-800 to-slate-900 text-white py-24 px-6">
+    <div class="max-w-4xl mx-auto text-center">
+        <h2 class="text-5xl md:text-6xl font-extrabold mb-6 leading-tight">Your Mental Health, Our Priority</h2>
+        <p class="text-xl md:text-2xl text-blue-100 mb-10">Professional psychological services in Nairobi. Compassionate care tailored to your needs.</p>
+        <div class="flex flex-col md:flex-row gap-4 justify-center">
+            <button class="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-lg font-semibold text-lg transition shadow-lg">Book an Appointment</button>
+            <button class="bg-white hover:bg-slate-100 text-blue-900 px-8 py-4 rounded-lg font-semibold text-lg transition">Learn More</button>
+        </div>
+    </div>
+</header>
+
+<!-- Services Section -->
+<section id="services" class="bg-white py-20 px-6">
+    <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-16">
+            <h3 class="text-4xl font-bold text-blue-900 mb-4">Our Services</h3>
+            <p class="text-slate-600 text-lg">Specialized therapy for individuals and families</p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+            <!-- Individual Therapy -->
+            <div class="border-2 border-slate-200 rounded-xl p-8 hover:shadow-lg hover:border-blue-900 transition">
+                <div class="text-4xl mb-4">🎯</div>
+                <h4 class="text-2xl font-bold text-blue-900 mb-3">Individual Therapy</h4>
+                <p class="text-slate-600 mb-4">One-on-one sessions tailored to address personal challenges, trauma recovery, and mental wellness.</p>
+                <p class="text-2xl font-bold text-green-600">Ksh 2,500 <span class="text-sm text-slate-600">per session</span></p>
+            </div>
+
+            <!-- Trauma & PTSD -->
+            <div class="border-2 border-slate-200 rounded-xl p-8 hover:shadow-lg hover:border-blue-900 transition">
+                <div class="text-4xl mb-4">💪</div>
+                <h4 class="text-2xl font-bold text-blue-900 mb-3">Trauma Recovery</h4>
+                <p class="text-slate-600 mb-4">Specialized treatment for trauma, PTSD, and complex emotional recovery using evidence-based approaches.</p>
+                <p class="text-2xl font-bold text-green-600">Ksh 2,500 <span class="text-sm text-slate-600">per session</span></p>
+            </div>
+
+            <!-- Couples Therapy -->
+            <div class="border-2 border-slate-200 rounded-xl p-8 hover:shadow-lg hover:border-blue-900 transition">
+                <div class="text-4xl mb-4">💑</div>
+                <h4 class="text-2xl font-bold text-blue-900 mb-3">Family Support</h4>
+                <p class="text-slate-600 mb-4">Supportive guidance for couples and families to strengthen relationships and resolve conflicts.</p>
+                <p class="text-2xl font-bold text-green-600">Ksh 2,500 <span class="text-sm text-slate-600">per session</span></p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="bg-slate-50 py-20 px-6">
+    <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-16">
+            <h3 class="text-4xl font-bold text-blue-900 mb-4">Why Choose NAPH Clinic?</h3>
+        </div>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="text-center">
+                <div class="text-5xl mb-4">🔒</div>
+                <h4 class="font-bold text-blue-900 mb-2">Confidential</h4>
+                <p class="text-slate-600 text-sm">Your privacy is our top priority. All sessions are confidential and secure.</p>
+            </div>
+            <div class="text-center">
+                <div class="text-5xl mb-4">👨‍⚕️</div>
+                <h4 class="font-bold text-blue-900 mb-2">Professional</h4>
+                <p class="text-slate-600 text-sm">Licensed therapists with extensive experience in psychological care.</p>
+            </div>
+            <div class="text-center">
+                <div class="text-5xl mb-4">⏰</div>
+                <h4 class="font-bold text-blue-900 mb-2">Flexible</h4>
+                <p class="text-slate-600 text-sm">Schedule sessions at times that work best for your lifestyle.</p>
+            </div>
+            <div class="text-center">
+                <div class="text-5xl mb-4">💻</div>
+                <h4 class="font-bold text-blue-900 mb-2">Digital First</h4>
+                <p class="text-slate-600 text-sm">Access your records and feedback securely online anytime.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Patient Resources Section -->
+<section id="resources" class="bg-white py-20 px-6">
+    <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-16">
+            <h3 class="text-4xl font-bold text-blue-900 mb-4">New Patient Resources</h3>
+            <p class="text-slate-600 text-lg">Download these forms before your first appointment</p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+            <!-- Consent Form -->
+            <div class="bg-gradient-to-br from-blue-50 to-slate-50 border-2 border-blue-200 p-8 rounded-xl hover:shadow-lg transition">
+                <div class="text-5xl mb-4">📋</div>
+                <h4 class="text-xl font-bold text-blue-900 mb-3">Informed Consent Form</h4>
+                <p class="text-slate-600 mb-6 text-sm">Legal agreement outlining therapist-patient relationship, confidentiality, fees, and therapeutic approach.</p>
+                <a href="#" class="inline-block bg-blue-900 text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition font-semibold">Download PDF</a>
+            </div>
+
+            <!-- Biodata Form -->
+            <div class="bg-gradient-to-br from-green-50 to-slate-50 border-2 border-green-200 p-8 rounded-xl hover:shadow-lg transition">
+                <div class="text-5xl mb-4">👤</div>
+                <h4 class="text-xl font-bold text-blue-900 mb-3">Client Biodata Form</h4>
+                <p class="text-slate-600 mb-6 text-sm">Initial demographic and health information to help us understand your background and medical history.</p>
+                <a href="#" class="inline-block bg-blue-900 text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition font-semibold">Download PDF</a>
+            </div>
+
+            <!-- Contract Form -->
+            <div class="bg-gradient-to-br from-purple-50 to-slate-50 border-2 border-purple-200 p-8 rounded-xl hover:shadow-lg transition">
+                <div class="text-5xl mb-4">📝</div>
+                <h4 class="text-xl font-bold text-blue-900 mb-3">Service Contract</h4>
+                <p class="text-slate-600 mb-6 text-sm">Details about session policies, cancellation procedures, fees, and office guidelines.</p>
+                <a href="#" class="inline-block bg-blue-900 text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition font-semibold">Download PDF</a>
+            </div>
+        </div>
+
+        <div class="mt-12 bg-blue-50 border-l-4 border-blue-900 p-6 rounded">
+            <p class="text-slate-700"><span class="font-bold text-blue-900">💡 Tip:</span> You can download and print these forms, or fill them out in your patient portal after logging in. No more waiting in the reception area!</p>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="bg-gradient-to-r from-blue-900 to-slate-900 text-white py-16 px-6">
+    <div class="max-w-4xl mx-auto text-center">
+        <h3 class="text-4xl font-bold mb-6">Ready to Begin Your Journey?</h3>
+        <p class="text-xl text-blue-100 mb-8">First-time patients: Download the forms above and book your appointment today.</p>
+        <p class="text-blue-100 mb-8">Returning patients: Log in to view your session feedback and clinical assessments.</p>
+        <div class="flex flex-col md:flex-row gap-4 justify-center">
+            <button class="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-lg font-semibold transition">Book Now</button>
+            <a href="/login" class="bg-white hover:bg-slate-100 text-blue-900 px-8 py-3 rounded-lg font-semibold transition">Client Portal</a>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-slate-900 text-slate-300 py-12 px-6">
+    <div class="max-w-6xl mx-auto">
+        <div class="grid md:grid-cols-3 gap-8 mb-8">
+            <div>
+                <h4 class="text-white font-bold mb-4">NAPH Clinic</h4>
+                <p class="text-sm">Professional psychological services providing compassionate care in Nairobi.</p>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4">Contact</h4>
+                <p class="text-sm">P.O. Box 40166-00100</p>
+                <p class="text-sm">Nairobi, Kenya</p>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4">Privacy</h4>
+                <p class="text-sm">Your privacy is protected under the Kenya Data Protection Act (2019).</p>
+            </div>
+        </div>
+        <div class="border-t border-slate-700 pt-8">
+            <p class="text-center text-sm text-slate-400">&copy; 2026 NAPH Clinic. All rights reserved. Confidentiality & Security.</p>
+        </div>
+    </div>
+</footer>
+
+{% endblock %}
