@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="min-h-screen bg-slate-50">
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-blue-900 rounded-full flex items-center justify-center">
+                        <span class="text-white font-bold">N</span>
+                    </div>
+                    <h1 class="text-xl font-bold text-blue-900">NAPH Clinic</h1>
+                </div>
+                <div class="flex items-center gap-4">
+                    <nav class="hidden md:flex gap-6">
+                        <a href="{% url 'therapist_patients' %}" class="text-slate-600 hover:text-blue-900">Patients</a>
+                        <a href="{% url 'manage_appointments' %}" class="text-slate-600 hover:text-blue-900">Appointments</a>
+                        <a href="{% url 'billing_dashboard' %}" class="text-slate-600 hover:text-blue-900">Billing</a>
+                    </nav>
+                    <div class="border-l pl-4">
+                        <span class="text-slate-600">{{ user.first_name }}</span>
+                        <a href="{% url 'therapist_logout' %}" class="ml-4 text-red-600 hover:text-red-700 font-semibold">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- Welcome Header -->
+        <div class="mb-8">
+            <h2 class="text-4xl font-bold text-blue-900 mb-2">Dashboard</h2>
+            <p class="text-slate-600">Welcome back, {{ user.first_name }}. Here's your clinic overview.</p>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <!-- Total Patients -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-slate-600 text-sm">Total Patients</p>
+                        <p class="text-4xl font-bold text-blue-900 mt-2">{{ all_patients }}</p>
+                    </div>
+                    <span class="text-3xl">👥</span>
+                </div>
+            </div>
+
+            <!-- Today's Appointments -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-slate-600 text-sm">Today's Sessions</p>
+                        <p class="text-4xl font-bold text-green-600 mt-2">{{ today_appointments|length }}</p>
+                    </div>
+                    <span class="text-3xl">📅</span>
+                </div>
+            </div>
+
+            <!-- Pending Payments -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-slate-600 text-sm">Pending Payments</p>
+                        <p class="text-4xl font-bold text-yellow-600 mt-2">Ksh {{ total_pending|floatformat:0 }}</p>
+                    </div>
+                    <span class="text-3xl">💰</span>
+                </div>
+            </div>
+
+            <!-- Revenue -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-slate-600 text-sm">Monthly Sessions</p>
+                        <p class="text-4xl font-bold text-blue-600 mt-2">{{ recent_sessions|length }}</p>
+                    </div>
+                    <span class="text-3xl">📊</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid lg:grid-cols-3 gap-8">
+            <!-- Left Column (2/3 width) -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Today's Appointments -->
+                <div class="bg-white rounded-lg shadow">
+                    <div class="bg-gradient-to-r from-green-500 to-green-600 text-white p-6 rounded-t-lg">
+                        <h3 class="text-2xl font-bold">📅 Today's Sessions</h3>
+                    </div>
+                    <div class="p-6">
+                        {% if today_appointments %}
+                            <div class="space-y-3">
+                                {% for appt in today_appointments %}
+                                <div class="border-l-4 border-green-500 bg-green-50 p-4 rounded flex justify-between items-start">
+                                    <div>
+                                        <p class="font-bold text-slate-900">{{ appt.appointment_date|time:"H:i" }} - {{ appt.patient.user.get_full_name }}</p>
+                                        <p class="text-sm text-slate-600 mt-1">{{ appt.patient.phone_number }}</p>
+                                        <p class="text-sm text-slate-700 mt-2"><strong>Duration:</strong> {{ appt.duration_minutes }} min</p>
+                                    </div>
+                                    <a href="{% url 'manage_appointments' %}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">View</a>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p class="text-slate-500 text-center py-6">No appointments scheduled for today</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Upcoming Appointments -->
+                <div class="bg-white rounded-lg shadow">
+                    <div class="bg-gradient-to-r from-blue-900 to-slate-900 text-white p-6 rounded-t-lg">
+                        <h3 class="text-2xl font-bold">📋 Upcoming Appointments</h3>
+                    </div>
+                    <div class="p-6">
+                        {% if upcoming_appointments %}
+                            <div class="space-y-3">
+                                {% for appt in upcoming_appointments %}
+                                <div class="border border-slate-200 p-4 rounded-lg hover:shadow-md transition">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <p class="font-bold text-slate-900">{{ appt.patient.user.get_full_name }}</p>
+                                            <p class="text-sm text-slate-600">{{ appt.appointment_date|date:"M d, Y - H:i" }}</p>
+                                        </div>
+                                        <a href="{% url 'patient_detail' appt.patient.id %}" class="text-blue-900 hover:underline text-sm">View Patient</a>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p class="text-slate-500 text-center py-6">No upcoming appointments</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar -->
+            <div class="space-y-6">
+                <!-- Quick Actions -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-bold text-blue-900 mb-4">Quick Actions</h3>
+                    <div class="space-y-2">
+                        <a href="{% url 'therapist_patients' %}" class="block w-full bg-blue-900 text-white py-2 px-4 rounded-lg hover:bg-blue-800 text-center font-semibold">👥 Manage Patients</a>
+                        <a href="{% url 'manage_appointments' %}" class="block w-full bg-slate-100 text-slate-900 py-2 px-4 rounded-lg hover:bg-slate-200 text-center font-semibold">📅 View Appointments</a>
+                        <a href="{% url 'billing_dashboard' %}" class="block w-full bg-slate-100 text-slate-900 py-2 px-4 rounded-lg hover:bg-slate-200 text-center font-semibold">💳 Billing</a>
+                    </div>
+                </div>
+
+                <!-- Pending Payments Card -->
+                {% if pending_payments %}
+                <div class="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-6">
+                    <h3 class="text-lg font-bold text-yellow-900 mb-3">⚠️ Pending Payments</h3>
+                    <p class="text-yellow-800 text-sm mb-3">{{ pending_payments|length }} sessions with outstanding payments</p>
+                    <p class="text-2xl font-bold text-yellow-900 mb-4">Ksh {{ total_pending|floatformat:0 }}</p>
+                    <a href="{% url 'billing_dashboard' %}" class="inline-block bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700">Review Payments</a>
+                </div>
+                {% endif %}
+
+                <!-- Clinic Info -->
+                <div class="bg-blue-50 rounded-lg p-6 border border-blue-200">
+                    <h3 class="text-lg font-bold text-blue-900 mb-3">📍 Clinic Info</h3>
+                    <p class="text-sm text-blue-800 mb-2">
+                        <span class="font-semibold">P.O. Box:</span> 40166-00100
+                    </p>
+                    <p class="text-sm text-blue-800">
+                        <span class="font-semibold">Location:</span> Nairobi, Kenya
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

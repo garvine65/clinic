@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block title %}Booking Confirmed - NAPH Clinic{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-green-50 to-green-100">
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-md">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-blue-900">NAPH Clinic</h1>
+            <div class="flex items-center gap-4">
+                <span class="text-gray-700">Welcome, <strong>{{ user.first_name }}</strong></span>
+                <a href="{% url 'patient_logout' %}" class="text-red-500 hover:text-red-700 font-semibold">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-4xl mx-auto px-4 py-12">
+        <!-- Success Message -->
+        <div class="bg-white rounded-lg shadow-xl p-8 mb-8">
+            <!-- Success Icon -->
+            <div class="flex justify-center mb-6">
+                <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
+                    <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Main Heading -->
+            <h2 class="text-4xl font-bold text-center text-green-600 mb-2">Appointment Confirmed!</h2>
+            <p class="text-center text-gray-600 mb-8">Thank you for booking with NAPH Clinic. Your appointment has been successfully scheduled.</p>
+
+            <!-- Appointment Details Card -->
+            <div class="bg-gradient-to-br from-green-50 to-blue-50 rounded-lg p-8 mb-8 border-2 border-green-200">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6">Your Appointment Details</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <!-- Date & Time -->
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v2h16V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5H4v6a2 2 0 002 2h12a2 2 0 002-2V7h-2v1a1 1 0 11-2 0V7H7v1a1 1 0 11-2 0V7z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-600 uppercase tracking-wide">Date & Time</p>
+                            <p class="text-2xl font-bold text-gray-900">{{ appointment.appointment_date|date:"F d, Y" }}</p>
+                            <p class="text-lg text-gray-700">{{ appointment.appointment_date|time:"H:i" }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Therapist -->
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-600 uppercase tracking-wide">Your Therapist</p>
+                            <p class="text-2xl font-bold text-gray-900">{{ appointment.therapist.get_full_name }}</p>
+                            <p class="text-gray-700">Appointment ID: #{{ appointment.id }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Duration & Cost -->
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v3.586L7.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V7z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-600 uppercase tracking-wide">Session Duration</p>
+                            <p class="text-2xl font-bold text-gray-900">{{ appointment.duration_minutes }} minutes</p>
+                            <p class="text-gray-700">(Standard session length)</p>
+                        </div>
+                    </div>
+
+                    <!-- Cost -->
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M8.16 5.314l4.897-1.596A1 1 0 0114.791 4.71l1.573 4.734a1 1 0 01-.78 1.268l-4.897 1.596a1 1 0 01-1.268-.78l-1.573-4.734a1 1 0 01.78-1.268z"></path>
+                                <path fill-rule="evenodd" d="M5 2a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V4a2 2 0 00-2-2H5zm0 2h10v10H5V4z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-600 uppercase tracking-wide">Cost</p>
+                            <p class="text-2xl font-bold text-green-600">Ksh 2,500</p>
+                            <p class="text-gray-700">Payment due at start of session</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status -->
+                <div class="flex items-center gap-3 p-4 bg-green-100 rounded-lg border-l-4 border-green-600">
+                    <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="font-semibold text-green-800">Status: <strong>Scheduled</strong></span>
+                </div>
+            </div>
+
+            <!-- What Happens Next -->
+            <div class="bg-blue-50 rounded-lg p-6 mb-8 border-l-4 border-blue-500">
+                <h4 class="font-bold text-blue-900 mb-4 text-lg">📬 What Happens Next?</h4>
+                <ol class="space-y-3 text-gray-700 list-decimal list-inside">
+                    <li><strong>Confirmation Email:</strong> Check your email for appointment details and therapist contact info</li>
+                    <li><strong>24-Hour Reminder:</strong> You'll receive an SMS reminder 24 hours before your appointment</li>
+                    <li><strong>Arrive Early:</strong> Please be available 5 minutes before your scheduled time</li>
+                    <li><strong>Session Link:</strong> If virtual, you'll receive a video call link via email</li>
+                    <li><strong>Payment:</strong> Payment is due at the start of the session via M-Pesa or cash</li>
+                </ol>
+            </div>
+
+            <!-- Important Notes -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <!-- Cancellation Policy -->
+                <div class="bg-yellow-50 rounded-lg p-6 border border-yellow-200">
+                    <h4 class="font-bold text-yellow-900 mb-3">📋 Cancellation Policy</h4>
+                    <p class="text-sm text-yellow-800">
+                        You can cancel or reschedule up to <strong>48 hours</strong> before the appointment without penalty. Cancel with less notice and you may forfeit the session fee.
+                    </p>
+                    <a href="{% url 'cancel_booking' appointment.id %}" class="mt-4 inline-block text-yellow-700 hover:text-yellow-900 font-semibold underline">
+                        Cancel this Appointment
+                    </a>
+                </div>
+
+                <!-- Confidentiality -->
+                <div class="bg-purple-50 rounded-lg p-6 border border-purple-200">
+                    <h4 class="font-bold text-purple-900 mb-3">🔒 Confidentiality</h4>
+                    <p class="text-sm text-purple-800">
+                        All sessions are completely confidential and comply with Kenya's Data Protection Act. Your information is secure with us.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{% url 'patient_appointments' %}" 
+                   class="px-8 py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold rounded-lg transition transform hover:scale-105 text-center">
+                    View All Appointments
+                </a>
+                <a href="{% url 'patient_dashboard' %}" 
+                   class="px-8 py-3 bg-gray-500 hover:bg-gray-600 text-white font-bold rounded-lg transition text-center">
+                    Back to Dashboard
+                </a>
+            </div>
+        </div>
+
+        <!-- Contact Support -->
+        <div class="bg-white rounded-lg shadow-md p-6 text-center">
+            <p class="text-gray-700 mb-2">
+                Need to make changes or have questions? <strong>Contact us:</strong>
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-6 text-sm">
+                <a href="tel:+254700123456" class="text-blue-600 hover:text-blue-800 font-semibold">
+                    📞 +254 700 123 456
+                </a>
+                <a href="mailto:info@naphealth.org" class="text-blue-600 hover:text-blue-800 font-semibold">
+                    📧 info@naphealth.org
+                </a>
+                <a href="https://wa.me/254700123456" class="text-blue-600 hover:text-blue-800 font-semibold">
+                    💬 WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="min-h-screen bg-slate-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-8">
+                    <a href="{% url 'therapist_dashboard' %}" class="text-slate-600 hover:text-blue-900">← Back to Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- Patient Header -->
+        <div class="bg-gradient-to-r from-blue-900 to-slate-900 text-white rounded-lg p-8 mb-8">
+            <h2 class="text-4xl font-bold mb-2">{{ patient.user.get_full_name }}</h2>
+            <p class="text-blue-100">Patient ID: #{{ patient.id }} | Member since {{ patient.created_at|date:"M d, Y" }}</p>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid lg:grid-cols-3 gap-8">
+            <!-- Left Column -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Patient Information -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-2xl font-bold text-blue-900 mb-6">📋 Patient Information</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="text-slate-600 text-sm font-semibold">Email</p>
+                            <p class="text-slate-900">{{ patient.user.email }}</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-600 text-sm font-semibold">Phone</p>
+                            <p class="text-slate-900">{{ patient.phone_number|default:"Not provided" }}</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-600 text-sm font-semibold">Date of Birth</p>
+                            <p class="text-slate-900">{% if patient.date_of_birth %}{{ patient.date_of_birth|date:"M d, Y" }}{% else %}Not provided{% endif %}</p>
+                        </div>
+                        <div>
+                            <p class="text-slate-600 text-sm font-semibold">Gender</p>
+                            <p class="text-slate-900">{{ patient.get_gender_display|default:"Not provided" }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Assessments -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold text-blue-900">📝 Clinical Assessments</h3>
+                        <a href="{% url 'therapist_patients' %}" class="text-blue-600 hover:underline font-semibold">+ New Assessment</a>
+                    </div>
+
+                    {% if assessments %}
+                        <div class="space-y-3">
+                            {% for assessment in assessments %}
+                            <div class="border border-slate-200 rounded-lg p-4 hover:shadow-md transition">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h4 class="font-bold text-slate-900">{{ assessment.title }}</h4>
+                                    <span class="text-xs {% if assessment.is_visible_to_patient %}bg-green-100 text-green-900{% else %}bg-yellow-100 text-yellow-900{% endif %} px-3 py-1 rounded-full">
+                                        {% if assessment.is_visible_to_patient %}Visible to Patient{% else %}Private{% endif %}
+                                    </span>
+                                </div>
+                                <p class="text-sm text-slate-600 mb-2">{{ assessment.created_at|date:"M d, Y" }}</p>
+                                <p class="text-sm text-slate-700 line-clamp-2">{{ assessment.content }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-slate-500">No assessments yet for this patient</p>
+                    {% endif %}
+                </div>
+
+                <!-- Session History -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-2xl font-bold text-blue-900 mb-6">📊 Session History</h3>
+
+                    {% if sessions %}
+                        <div class="space-y-3">
+                            {% for session in sessions %}
+                            <div class="border-l-4 border-blue-500 bg-blue-50 p-4 rounded">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <p class="font-semibold text-slate-900">{{ session.session_date|date:"M d, Y H:i" }}</p>
+                                        <p class="text-sm text-slate-600">{{ session.get_payment_status_display }}</p>
+                                    </div>
+                                    <span class="text-green-600 font-bold">Ksh {{ session.amount }}</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-slate-500">No sessions recorded for this patient</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Right Sidebar -->
+            <div class="space-y-6">
+                <!-- Actions -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-bold text-blue-900 mb-4">⚙️ Actions</h3>
+                    <div class="space-y-2">
+                        <button class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 text-sm font-semibold">
+                            📝 Create Assessment
+                        </button>
+                        <button class="w-full bg-slate-100 text-slate-900 py-2 px-4 rounded-lg hover:bg-slate-200 text-sm font-semibold">
+                            📅 View Appointments
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Consent Status -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-bold text-blue-900 mb-4">✅ Consent Status</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3">
+                            {% if patient.consent_form_signed %}
+                                <span class="text-green-600 text-2xl">✓</span>
+                                <div>
+                                    <p class="font-semibold text-slate-900 text-sm">Consent Signed</p>
+                                    <p class="text-xs text-slate-600">{{ patient.consent_form_date|date:"M d, Y" }}</p>
+                                </div>
+                            {% else %}
+                                <span class="text-yellow-600 text-2xl">⚠</span>
+                                <p class="font-semibold text-slate-900 text-sm">Pending Consent</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Medical Info -->
+                {% if patient.medical_history %}
+                <div class="bg-yellow-50 rounded-lg border border-yellow-200 p-6">
+                    <h3 class="text-lg font-bold text-yellow-900 mb-3">⚠️ Medical History</h3>
+                    <p class="text-sm text-yellow-800">{{ patient.medical_history }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

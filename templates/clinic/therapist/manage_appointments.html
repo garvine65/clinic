@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="min-h-screen bg-slate-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-8">
+                    <a href="{% url 'therapist_dashboard' %}" class="text-slate-600 hover:text-blue-900">← Back to Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-4xl font-bold text-blue-900">Appointment Management</h2>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="flex gap-2 mb-8 bg-white rounded-lg shadow p-4">
+            <a href="?status=all" class="{% if status_filter == 'all' %}bg-blue-900 text-white{% else %}bg-slate-100 text-slate-900 hover:bg-slate-200{% endif %} px-4 py-2 rounded-lg font-semibold">
+                All ({{ appointment_count }})
+            </a>
+            <a href="?status=scheduled" class="{% if status_filter == 'scheduled' %}bg-green-600 text-white{% else %}bg-slate-100 text-slate-900 hover:bg-slate-200{% endif %} px-4 py-2 rounded-lg font-semibold">
+                Scheduled
+            </a>
+            <a href="?status=completed" class="{% if status_filter == 'completed' %}bg-blue-600 text-white{% else %}bg-slate-100 text-slate-900 hover:bg-slate-200{% endif %} px-4 py-2 rounded-lg font-semibold">
+                Completed
+            </a>
+            <a href="?status=cancelled" class="{% if status_filter == 'cancelled' %}bg-red-600 text-white{% else %}bg-slate-100 text-slate-900 hover:bg-slate-200{% endif %} px-4 py-2 rounded-lg font-semibold">
+                Cancelled
+            </a>
+        </div>
+
+        <!-- Upcoming Appointments -->
+        <div class="bg-white rounded-lg shadow p-6 mb-8">
+            <h3 class="text-2xl font-bold text-blue-900 mb-6">📅 Upcoming Appointments</h3>
+
+            {% if upcoming_appointments %}
+                <div class="space-y-4">
+                    {% for appointment in upcoming_appointments %}
+                    <div class="border border-slate-200 rounded-lg p-4 hover:shadow-md transition">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h4 class="font-bold text-slate-900">{{ appointment.patient.user.get_full_name }}</h4>
+                                <p class="text-sm text-slate-600">{{ appointment.appointment_date|date:"l, F j, Y H:i" }}</p>
+                            </div>
+                            <span class="text-sm bg-green-100 text-green-900 px-3 py-1 rounded-full">{{ appointment.get_status_display }}</span>
+                        </div>
+                        <p class="text-sm text-slate-700 mb-3">{{ appointment.patient.user.email }}</p>
+                        <form method="POST" action="{% url 'update_appointment_status' appointment.id %}" class="flex gap-2">
+                            {% csrf_token %}
+                            <select name="status" class="flex-1 px-3 py-2 border border-slate-300 rounded text-sm">
+                                <option value="scheduled" {% if appointment.status == 'scheduled' %}selected{% endif %}>Scheduled</option>
+                                <option value="completed" {% if appointment.status == 'completed' %}selected{% endif %}>Completed</option>
+                                <option value="cancelled" {% if appointment.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                                <option value="no-show" {% if appointment.status == 'no-show' %}selected{% endif %}>No Show</option>
+                            </select>
+                            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded text-sm font-semibold hover:bg-blue-700">Update</button>
+                        </form>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-slate-500">No upcoming appointments</p>
+            {% endif %}
+        </div>
+
+        <!-- Past Appointments -->
+        {% if past_appointments %}
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-2xl font-bold text-blue-900 mb-6">📋 Past Appointments</h3>
+
+            <div class="space-y-3">
+                {% for appointment in past_appointments %}
+                <div class="border-l-4 border-slate-300 bg-slate-50 p-4 rounded">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="font-semibold text-slate-900">{{ appointment.patient.user.get_full_name }}</p>
+                            <p class="text-sm text-slate-600">{{ appointment.appointment_date|date:"M d, Y" }}</p>
+                        </div>
+                        <span class="text-sm bg-slate-200 text-slate-900 px-3 py-1 rounded-full">{{ appointment.get_status_display }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

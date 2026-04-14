@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="min-h-screen bg-slate-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-8">
+                    <a href="{% url 'patient_dashboard' %}" class="text-slate-600 hover:text-blue-900">← Back to Dashboard</a>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="{% url 'patient_logout' %}" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <h2 class="text-4xl font-bold text-blue-900 mb-8">My Profile</h2>
+
+        <!-- Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="mb-6 p-4 rounded-lg {% if message.tags %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="grid lg:grid-cols-3 gap-8">
+            <!-- Main Profile Section -->
+            <div class="lg:col-span-2">
+                <!-- Personal Information -->
+                <div class="bg-white rounded-lg shadow mb-6">
+                    <div class="bg-gradient-to-r from-blue-900 to-slate-900 text-white p-6 rounded-t-lg">
+                        <h3 class="text-2xl font-bold">👤 Personal Information</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <p class="text-slate-600 text-sm">First Name</p>
+                                <p class="text-lg font-semibold text-slate-900">{{ user.first_name }}</p>
+                            </div>
+                            <div>
+                                <p class="text-slate-600 text-sm">Last Name</p>
+                                <p class="text-lg font-semibold text-slate-900">{{ user.last_name }}</p>
+                            </div>
+                            <div>
+                                <p class="text-slate-600 text-sm">Email Address</p>
+                                <p class="text-lg font-semibold text-slate-900">{{ user.email }}</p>
+                            </div>
+                            <div>
+                                <p class="text-slate-600 text-sm">Phone Number</p>
+                                <p class="text-lg font-semibold text-slate-900">{{ patient.phone_number|default:"Not provided" }}</p>
+                            </div>
+                            <div>
+                                <p class="text-slate-600 text-sm">Date of Birth</p>
+                                <p class="text-lg font-semibold text-slate-900">
+                                    {% if patient.date_of_birth %}
+                                        {{ patient.date_of_birth|date:"M d, Y" }}
+                                    {% else %}
+                                        Not provided
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div>
+                                <p class="text-slate-600 text-sm">Gender</p>
+                                <p class="text-lg font-semibold text-slate-900">{{ patient.get_gender_display|default:"Not provided" }}</p>
+                            </div>
+                        </div>
+
+                        {% if patient.address %}
+                        <div class="mt-6 pt-6 border-t">
+                            <p class="text-slate-600 text-sm mb-2">Address</p>
+                            <p class="text-slate-900">{{ patient.address }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Emergency Contact -->
+                <div class="bg-white rounded-lg shadow mb-6">
+                    <div class="bg-gradient-to-r from-red-600 to-red-700 text-white p-6 rounded-t-lg">
+                        <h3 class="text-2xl font-bold">🆘 Emergency Contact</h3>
+                    </div>
+                    <div class="p-6">
+                        {% if patient.emergency_contact_name %}
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <p class="text-slate-600 text-sm">Name</p>
+                                    <p class="text-lg font-semibold text-slate-900">{{ patient.emergency_contact_name }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-slate-600 text-sm">Phone Number</p>
+                                    <p class="text-lg font-semibold text-slate-900">{{ patient.emergency_contact }}</p>
+                                </div>
+                            </div>
+                        {% else %}
+                            <p class="text-slate-500">No emergency contact information provided</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Medical Information -->
+                <div class="bg-white rounded-lg shadow">
+                    <div class="bg-gradient-to-r from-yellow-600 to-yellow-700 text-white p-6 rounded-t-lg">
+                        <h3 class="text-2xl font-bold">⚕️ Medical Information</h3>
+                    </div>
+                    <div class="p-6 space-y-6">
+                        {% if patient.medical_history %}
+                        <div>
+                            <p class="text-slate-600 text-sm font-semibold">Medical History</p>
+                            <p class="text-slate-900 mt-1">{{ patient.medical_history }}</p>
+                        </div>
+                        {% endif %}
+
+                        {% if patient.current_medications %}
+                        <div>
+                            <p class="text-slate-600 text-sm font-semibold">Current Medications</p>
+                            <p class="text-slate-900 mt-1">{{ patient.current_medications }}</p>
+                        </div>
+                        {% endif %}
+
+                        {% if patient.allergies %}
+                        <div>
+                            <p class="text-slate-600 text-sm font-semibold">Allergies</p>
+                            <p class="text-slate-900 mt-1">{{ patient.allergies }}</p>
+                        </div>
+                        {% endif %}
+
+                        {% if not patient.medical_history and not patient.current_medications and not patient.allergies %}
+                            <p class="text-slate-500">No medical information provided</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="space-y-6">
+                <!-- Consent Status -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-bold text-blue-900 mb-4">✅ Consent Status</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3">
+                            {% if patient.consent_form_signed %}
+                                <span class="text-green-600 text-2xl">✓</span>
+                                <div>
+                                    <p class="font-semibold text-slate-900">Consent Form Signed</p>
+                                    <p class="text-sm text-slate-600">{{ patient.consent_form_date|date:"M d, Y" }}</p>
+                                </div>
+                            {% else %}
+                                <span class="text-yellow-600 text-2xl">⚠</span>
+                                <div>
+                                    <p class="font-semibold text-slate-900">Consent Form Pending</p>
+                                    <p class="text-sm text-slate-600">Please sign before your first session</p>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="flex items-center gap-3">
+                            {% if patient.biodata_complete %}
+                                <span class="text-green-600 text-2xl">✓</span>
+                                <div>
+                                    <p class="font-semibold text-slate-900">Biodata Complete</p>
+                                    <p class="text-sm text-slate-600">All information provided</p>
+                                </div>
+                            {% else %}
+                                <span class="text-yellow-600 text-2xl">⚠</span>
+                                <div>
+                                    <p class="font-semibold text-slate-900">Biodata Incomplete</p>
+                                    <p class="text-sm text-slate-600">Please complete your intake form</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Information -->
+                <div class="bg-blue-50 rounded-lg border border-blue-200 p-6">
+                    <h3 class="text-lg font-bold text-blue-900 mb-4">ℹ️ Account Info</h3>
+                    <div class="space-y-2 text-sm">
+                        <p class="text-blue-800">
+                            <span class="font-semibold">Member Since:</span><br>
+                            {{ user.date_joined|date:"M d, Y" }}
+                        </p>
+                        <p class="text-blue-800 mt-3">
+                            <span class="font-semibold">Last Updated:</span><br>
+                            {{ patient.updated_at|date:"M d, Y" }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Help -->
+                <div class="bg-slate-100 rounded-lg p-6">
+                    <h3 class="text-lg font-bold text-slate-900 mb-3">💡 Need Help?</h3>
+                    <p class="text-sm text-slate-700 mb-4">Contact us if you need to update your information or have any questions about your account.</p>
+                    <a href="{% url 'home' %}" class="text-blue-900 hover:underline font-semibold text-sm">Contact Support</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="min-h-screen bg-slate-50">
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-blue-900 rounded-full flex items-center justify-center">
+                        <span class="text-white font-bold">N</span>
+                    </div>
+                    <h1 class="text-xl font-bold text-blue-900">NAPH Clinic</h1>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="text-slate-600">Welcome, <strong>{{ user.first_name }}</strong></span>
+                    <a href="{% url 'patient_profile' %}" class="text-slate-600 hover:text-blue-900">Profile</a>
+                    <a href="{% url 'patient_logout' %}" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="mb-6 p-4 rounded-lg {% if message.tags %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Welcome Header -->
+        <div class="mb-8">
+            <h2 class="text-4xl font-bold text-blue-900 mb-2">Your Therapy Portal</h2>
+            <p class="text-slate-600">Manage your appointments, view assessments, and track your progress</p>
+        </div>
+
+        <!-- Next Appointment Card -->
+        {% if next_appointment %}
+        <div class="bg-gradient-to-r from-blue-900 to-slate-900 text-white rounded-lg p-6 mb-8 shadow-lg">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h3 class="text-sm font-semibold text-blue-100 mb-2">YOUR NEXT APPOINTMENT</h3>
+                    <p class="text-3xl font-bold mb-2">{{ next_appointment.appointment_date|date:"D, M d, Y" }}</p>
+                    <p class="text-blue-100">{{ next_appointment.appointment_date|time:"H:i" }} - {{ next_appointment.duration_minutes }} minutes</p>
+                    {% if next_appointment.therapist %}
+                        <p class="text-blue-100 mt-2">Therapist: <strong>{{ next_appointment.therapist.get_full_name }}</strong></p>
+                    {% endif %}
+                </div>
+                <a href="{% url 'patient_appointments' %}" class="bg-white text-blue-900 px-6 py-2 rounded-lg font-semibold hover:bg-slate-100">View All</a>
+            </div>
+        </div>
+        {% else %}
+        <div class="bg-blue-50 border-2 border-blue-200 rounded-lg p-6 mb-8">
+            <p class="text-blue-900 font-semibold">📅 No upcoming appointments scheduled</p>
+            <p class="text-blue-700 text-sm mt-2">Contact us to book your next session</p>
+        </div>
+        {% endif %}
+
+        <!-- Main Content Grid -->
+        <div class="grid lg:grid-cols-3 gap-8 mb-8">
+            <!-- Left Column -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Recent Assessments -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold text-blue-900">Your Assessments</h3>
+                        <a href="{% url 'patient_assessments' %}" class="text-blue-900 hover:underline font-semibold">View All</a>
+                    </div>
+
+                    {% if recent_assessments %}
+                        <div class="space-y-4">
+                            {% for assessment in recent_assessments %}
+                            <div class="border border-slate-200 rounded-lg p-4 hover:shadow-md transition">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h4 class="font-bold text-slate-900">{{ assessment.title }}</h4>
+                                    <span class="text-xs bg-blue-100 text-blue-900 px-3 py-1 rounded-full">
+                                        {{ assessment.get_assessment_type_display }}
+                                    </span>
+                                </div>
+                                <p class="text-sm text-slate-600 mb-3">{{ assessment.created_at|date:"M d, Y" }}</p>
+                                <p class="text-slate-700 text-sm line-clamp-2">{{ assessment.content }}</p>
+                                <a href="{% url 'assessment_detail' assessment.id %}" class="text-blue-900 hover:underline text-sm font-semibold mt-2 inline-block">Read Full Assessment →</a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-slate-500">No assessments yet. Your therapist will share feedback after your sessions.</p>
+                    {% endif %}
+                </div>
+
+                <!-- Upcoming Appointments Preview -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-2xl font-bold text-blue-900 mb-6">Upcoming Sessions</h3>
+
+                    {% if upcoming_appointments %}
+                        <div class="space-y-4">
+                            {% for appointment in upcoming_appointments %}
+                            <div class="border-l-4 border-green-500 bg-green-50 p-4 rounded">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <p class="font-bold text-slate-900">{{ appointment.appointment_date|date:"D, M d" }}</p>
+                                        <p class="text-sm text-slate-600">{{ appointment.appointment_date|time:"H:i" }}</p>
+                                        {% if appointment.therapist %}
+                                            <p class="text-sm text-slate-700 mt-1">With <strong>{{ appointment.therapist.get_full_name }}</strong></p>
+                                        {% endif %}
+                                    </div>
+                                    <span class="text-green-700 font-semibold">Scheduled</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-slate-500">No upcoming appointments. Book your next session!</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Right Sidebar -->
+            <div class="space-y-6">
+                <!-- Quick Actions -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-bold text-blue-900 mb-4">Quick Actions</h3>
+                    <div class="space-y-2">
+                        <a href="{% url 'booking_calendar' %}" class="block w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 text-center font-semibold">✨ Book Appointment</a>
+                        <a href="{% url 'patient_profile' %}" class="block w-full bg-slate-100 text-slate-900 py-2 px-4 rounded-lg hover:bg-slate-200 text-center font-semibold">👤 My Profile</a>
+                        <a href="{% url 'patient_assessments' %}" class="block w-full bg-slate-100 text-slate-900 py-2 px-4 rounded-lg hover:bg-slate-200 text-center font-semibold">📋 All Assessments</a>
+                    </div>
+                </div>
+
+                <!-- Pending Forms -->
+                {% if pending_forms %}
+                <div class="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-6">
+                    <h3 class="text-lg font-bold text-yellow-900 mb-4">⚠️ Pending Forms</h3>
+                    <p class="text-yellow-800 text-sm mb-4">Please complete your initial forms before your first session:</p>
+                    <ul class="space-y-2">
+                        {% for form in pending_forms %}
+                            <li class="text-sm text-yellow-700">• {{ form.get_form_type_display }}</li>
+                        {% endfor %}
+                    </ul>
+                    <a href="{% url 'patient_profile' %}" class="mt-4 inline-block bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700">Complete Forms</a>
+                </div>
+                {% endif %}
+
+                <!-- Session Summary Card -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-bold text-blue-900 mb-4">📊 Your Progress</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <p class="text-sm text-slate-600">Total Sessions</p>
+                            <p class="text-2xl font-bold text-blue-900">{{ session_history|length }}</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-slate-600">Assessments Shared</p>
+                            <p class="text-2xl font-bold text-green-600">{{ recent_assessments|length }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Card -->
+                <div class="bg-blue-50 rounded-lg p-6 border border-blue-200">
+                    <h3 class="text-lg font-bold text-blue-900 mb-3">📞 Need Help?</h3>
+                    <p class="text-sm text-blue-800 mb-3">Contact us directly to reschedule or discuss your care.</p>
+                    <p class="text-sm font-semibold text-blue-900">P.O. Box 40166-00100</p>
+                    <p class="text-sm text-blue-800">Nairobi, Kenya</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

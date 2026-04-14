@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}Book an Appointment - NAPH Clinic{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-md">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-blue-900">NAPH Clinic</h1>
+            <div class="flex items-center gap-4">
+                <span class="text-gray-700">Welcome, <strong>{{ user.first_name }}</strong></span>
+                <a href="{% url 'patient_logout' %}" class="text-red-500 hover:text-red-700 font-semibold">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h2 class="text-4xl font-bold text-blue-900 mb-2">Book an Appointment</h2>
+            <p class="text-gray-600">Select a therapist and choose your preferred time slot. Sessions are 50 minutes at Ksh 2,500 each.</p>
+        </div>
+
+        <!-- Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="mb-4 p-4 rounded-lg {% if message.tags %}bg-{{ message.tags }}-100 text-{{ message.tags }}-800{% else %}bg-green-100 text-green-800{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Therapists Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            {% for therapist_id, info in booking_info.items %}
+                <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition overflow-hidden">
+                    <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-4">
+                        <h3 class="text-xl font-bold text-white">
+                            {% for therapist in therapists %}
+                                {% if therapist.id == therapist_id %}
+                                    {{ therapist.get_full_name|default:therapist.username }}
+                                {% endif %}
+                            {% endfor %}
+                        </h3>
+                        {% if info.profile %}
+                            <p class="text-blue-100 text-sm">{{ info.profile.specialization }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="p-6">
+                        <!-- Therapist Info -->
+                        {% if info.profile %}
+                            <div class="mb-4 space-y-2 text-gray-600">
+                                <p><strong>License:</strong> {{ info.profile.license_number }}</p>
+                                {% if info.profile.hourly_rate %}
+                                    <p><strong>Rate:</strong> Ksh {{ info.profile.hourly_rate }}/hour</p>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+
+                        <!-- Availability Badge -->
+                        <div class="mb-4">
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm text-gray-600">Current Bookings:</span>
+                                <span class="inline-block bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">
+                                    {{ info.bookings_count }} booked today
+                                </span>
+                            </div>
+                            <div class="mt-2">
+                                {% if info.available %}
+                                    <span class="inline-block bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">
+                                        ✓ Available
+                                    </span>
+                                {% else %}
+                                    <span class="inline-block bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-semibold">
+                                        ⚠ Limited Availability
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Book Button -->
+                        <a href="{% url 'create_booking' %}?therapist_id={{ therapist_id }}" 
+                           class="w-full block text-center bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-2 px-4 rounded-lg transition transform hover:scale-105">
+                            Book with this Therapist
+                        </a>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-span-3 bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
+                    <p class="text-yellow-800 font-semibold">No therapists available at the moment. Please contact us at <strong>+254 700 123 456</strong></p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Info Section -->
+        <div class="bg-white rounded-lg shadow-md p-8 mb-8">
+            <h3 class="text-2xl font-bold text-blue-900 mb-4">How Our Booking Works</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-blue-500 mb-2">1</div>
+                    <h4 class="font-bold text-gray-800 mb-2">Select a Therapist</h4>
+                    <p class="text-gray-600">Choose from our qualified therapists based on their specialization</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-green-500 mb-2">2</div>
+                    <h4 class="font-bold text-gray-800 mb-2">Choose Your Time</h4>
+                    <p class="text-gray-600">Pick a date and time that works best for you from available slots</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-purple-500 mb-2">3</div>
+                    <h4 class="font-bold text-gray-800 mb-2">Confirm Booking</h4>
+                    <p class="text-gray-600">Get instant confirmation and receive reminder notifications</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="flex gap-4 mb-8">
+            <a href="{% url 'patient_dashboard' %}" class="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold transition">
+                ← Back to Dashboard
+            </a>
+            <a href="{% url 'patient_appointments' %}" class="px-6 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg font-semibold transition">
+                View My Appointments
+            </a>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+            <p class="text-gray-700"><strong>Questions about booking?</strong> Contact us at <strong>+254 700 123 456</strong> or email <strong>info@naphealth.org</strong></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

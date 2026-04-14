@@ -14,10 +14,14 @@
         <div class="hidden md:flex space-x-6 items-center">
             <a href="#services" class="text-slate-600 hover:text-blue-900 transition">Services</a>
             <a href="#resources" class="text-slate-600 hover:text-blue-900 transition">Patient Forms</a>
-            <a href="/login" class="bg-blue-900 text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition">Client Login</a>
+            <a href="{% url 'therapist_login' %}" class="text-slate-600 hover:text-blue-900 transition">Therapist</a>
+            <a href="{% url 'patient_login' %}" class="bg-blue-900 text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition">Client Login</a>
         </div>
         <div class="md:hidden">
-            <a href="/login" class="bg-blue-900 text-white px-4 py-2 rounded-lg text-sm">Login</a>
+            <div class="flex gap-2">
+                <a href="{% url 'therapist_login' %}" class="text-slate-600 hover:text-blue-900 text-sm">Therapist</a>
+                <a href="{% url 'patient_login' %}" class="bg-blue-900 text-white px-4 py-2 rounded-lg text-sm">Login</a>
+            </div>
         </div>
     </div>
 </nav>
@@ -28,7 +32,7 @@
         <h2 class="text-5xl md:text-6xl font-extrabold mb-6 leading-tight">Your Mental Health, Our Priority</h2>
         <p class="text-xl md:text-2xl text-blue-100 mb-10">Professional psychological services in Nairobi. Compassionate care tailored to your needs.</p>
         <div class="flex flex-col md:flex-row gap-4 justify-center">
-            <button class="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-lg font-semibold text-lg transition shadow-lg">Book an Appointment</button>
+            <a href="{% url 'book_appointment_redirect' %}" class="inline-block bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-lg font-semibold text-lg transition shadow-lg">Book an Appointment</a>
             <button class="bg-white hover:bg-slate-100 text-blue-900 px-8 py-4 rounded-lg font-semibold text-lg transition">Learn More</button>
         </div>
     </div>
@@ -116,7 +120,11 @@
                 <div class="text-5xl mb-4">📋</div>
                 <h4 class="text-xl font-bold text-blue-900 mb-3">Informed Consent Form</h4>
                 <p class="text-slate-600 mb-6 text-sm">Legal agreement outlining therapist-patient relationship, confidentiality, fees, and therapeutic approach.</p>
-                <a href="#" class="inline-block bg-blue-900 text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition font-semibold">Download PDF</a>
+                {% if consent_doc and consent_doc.file %}
+                    <a href="{% url 'download_document' 'consent' %}" class="inline-block bg-blue-900 text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition font-semibold">⬇️ Download PDF</a>
+                {% else %}
+                    <div class="inline-block bg-yellow-100 text-yellow-800 px-6 py-2 rounded-lg font-semibold text-sm">Coming Soon</div>
+                {% endif %}
             </div>
 
             <!-- Biodata Form -->
@@ -124,7 +132,11 @@
                 <div class="text-5xl mb-4">👤</div>
                 <h4 class="text-xl font-bold text-blue-900 mb-3">Client Biodata Form</h4>
                 <p class="text-slate-600 mb-6 text-sm">Initial demographic and health information to help us understand your background and medical history.</p>
-                <a href="#" class="inline-block bg-blue-900 text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition font-semibold">Download PDF</a>
+                {% if biodata_doc and biodata_doc.file %}
+                    <a href="{% url 'download_document' 'biodata' %}" class="inline-block bg-blue-900 text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition font-semibold">⬇️ Download PDF</a>
+                {% else %}
+                    <div class="inline-block bg-yellow-100 text-yellow-800 px-6 py-2 rounded-lg font-semibold text-sm">Coming Soon</div>
+                {% endif %}
             </div>
 
             <!-- Contract Form -->
@@ -132,7 +144,11 @@
                 <div class="text-5xl mb-4">📝</div>
                 <h4 class="text-xl font-bold text-blue-900 mb-3">Service Contract</h4>
                 <p class="text-slate-600 mb-6 text-sm">Details about session policies, cancellation procedures, fees, and office guidelines.</p>
-                <a href="#" class="inline-block bg-blue-900 text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition font-semibold">Download PDF</a>
+                {% if contract_doc and contract_doc.file %}
+                    <a href="{% url 'download_document' 'contract' %}" class="inline-block bg-blue-900 text-white px-6 py-2 rounded-lg hover:bg-blue-800 transition font-semibold">⬇️ Download PDF</a>
+                {% else %}
+                    <div class="inline-block bg-yellow-100 text-yellow-800 px-6 py-2 rounded-lg font-semibold text-sm">Coming Soon</div>
+                {% endif %}
             </div>
         </div>
 
@@ -149,8 +165,8 @@
         <p class="text-xl text-blue-100 mb-8">First-time patients: Download the forms above and book your appointment today.</p>
         <p class="text-blue-100 mb-8">Returning patients: Log in to view your session feedback and clinical assessments.</p>
         <div class="flex flex-col md:flex-row gap-4 justify-center">
-            <button class="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-lg font-semibold transition">Book Now</button>
-            <a href="/login" class="bg-white hover:bg-slate-100 text-blue-900 px-8 py-3 rounded-lg font-semibold transition">Client Portal</a>
+            <a href="{% url 'book_appointment_redirect' %}" class="inline-block bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-lg font-semibold transition">Book Now</a>
+            <a href="{% url 'patient_login' %}" class="bg-white hover:bg-slate-100 text-blue-900 px-8 py-3 rounded-lg font-semibold transition">Client Portal</a>
         </div>
     </div>
 </section>
