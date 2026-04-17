@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}Booking Confirmed - NAPH Clinic{% endblock %}
+{% block title %}Booking Confirmed - KEWOTA{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-gradient-to-br from-green-50 to-green-100">
+<div class="min-h-screen bg-gradient-to-br from-purple-50 to-purple-100">
     <!-- Navigation Bar -->
     <nav class="bg-white shadow-md">
         <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
-            <h1 class="text-2xl font-bold text-blue-900">NAPH Clinic</h1>
+            <h1 class="text-2xl font-bold text-slate-900">KEWOTA Platform</h1>
             <div class="flex items-center gap-4">
                 <span class="text-gray-700">Welcome, <strong>{{ user.first_name }}</strong></span>
                 <a href="{% url 'patient_logout' %}" class="text-red-500 hover:text-red-700 font-semibold">Logout</a>
@@ -28,18 +28,18 @@
             </div>
 
             <!-- Main Heading -->
-            <h2 class="text-4xl font-bold text-center text-green-600 mb-2">Appointment Confirmed!</h2>
-            <p class="text-center text-gray-600 mb-8">Thank you for booking with NAPH Clinic. Your appointment has been successfully scheduled.</p>
+            <h2 class="text-4xl font-bold text-center text-purple-700 mb-2">Appointment Confirmed!</h2>
+            <p class="text-center text-gray-600 mb-8">Your appointment has been successfully scheduled.</p>
 
             <!-- Appointment Details Card -->
-            <div class="bg-gradient-to-br from-green-50 to-blue-50 rounded-lg p-8 mb-8 border-2 border-green-200">
+            <div class="bg-gradient-to-br from-purple-50 to-slate-50 rounded-lg p-8 mb-8 border-2 border-purple-200">
                 <h3 class="text-2xl font-bold text-gray-800 mb-6">Your Appointment Details</h3>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                     <!-- Date & Time -->
                     <div class="flex items-start gap-4">
-                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                            <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-purple-700" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v2h16V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5H4v6a2 2 0 002 2h12a2 2 0 002-2V7h-2v1a1 1 0 11-2 0V7H7v1a1 1 0 11-2 0V7z"></path>
                             </svg>
                         </div>
@@ -104,16 +104,27 @@
             </div>
 
             <!-- What Happens Next -->
-            <div class="bg-blue-50 rounded-lg p-6 mb-8 border-l-4 border-blue-500">
-                <h4 class="font-bold text-blue-900 mb-4 text-lg">📬 What Happens Next?</h4>
+            <div class="bg-purple-50 rounded-lg p-6 mb-8 border-l-4 border-purple-500">
+                <h4 class="font-bold text-purple-900 mb-4 text-lg">📬 What Happens Next?</h4>
                 <ol class="space-y-3 text-gray-700 list-decimal list-inside">
                     <li><strong>Confirmation Email:</strong> Check your email for appointment details and therapist contact info</li>
                     <li><strong>24-Hour Reminder:</strong> You'll receive an SMS reminder 24 hours before your appointment</li>
                     <li><strong>Arrive Early:</strong> Please be available 5 minutes before your scheduled time</li>
                     <li><strong>Session Link:</strong> If virtual, you'll receive a video call link via email</li>
-                    <li><strong>Payment:</strong> Payment is due at the start of the session via M-Pesa or cash</li>
+                    <li><strong>Payment:</strong> You can pay now via M-PESA (recommended) or at reception</li>
                 </ol>
             </div>
+
+            {% if session_record and session_record.payment_status != "paid" %}
+            <div class="bg-white border-2 border-purple-200 rounded-lg p-6 mb-8">
+                <h4 class="font-bold text-slate-900 mb-2 text-lg">Pay with M-PESA</h4>
+                <p class="text-sm text-slate-600 mb-4">Send an STK push prompt to your phone and complete payment securely.</p>
+                <a href="{% url 'mpesa_pay_session' session_record.id %}"
+                   class="inline-block px-8 py-3 bg-purple-700 hover:bg-purple-800 text-white font-bold rounded-lg transition text-center">
+                    Pay with M-PESA
+                </a>
+            </div>
+            {% endif %}
 
             <!-- Important Notes -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -153,11 +164,11 @@
         <!-- Contact Support -->
         <div class="bg-white rounded-lg shadow-md p-6 text-center">
             <p class="text-gray-700 mb-2">
-                Need to make changes or have questions? <strong>Contact us:</strong>
+                Need changes? <strong>Contact reception:</strong>
             </p>
             <div class="flex flex-col sm:flex-row justify-center gap-6 text-sm">
-                <a href="tel:+254700123456" class="text-blue-600 hover:text-blue-800 font-semibold">
-                    📞 +254 700 123 456
+                <a href="tel:+254722402821" class="text-blue-600 hover:text-blue-800 font-semibold">
+                    📞 +254 722 402 821
                 </a>
                 <a href="mailto:info@naphealth.org" class="text-blue-600 hover:text-blue-800 font-semibold">
                     📧 info@naphealth.org

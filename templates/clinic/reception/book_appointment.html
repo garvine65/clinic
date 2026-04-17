@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Book Appointment - Reception{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+  <nav class="bg-white shadow-sm sticky top-0 z-40">
+    <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 bg-purple-700 rounded-full flex items-center justify-center text-white font-bold">K</div>
+        <div>
+          <p class="text-xs text-slate-500">KEWOTA</p>
+          <p class="text-lg font-bold text-slate-900">Book Appointment</p>
+        </div>
+      </div>
+      <a href="{% url 'reception_patient_detail' patient.id %}" class="text-purple-700 font-semibold hover:underline">Back</a>
+    </div>
+  </nav>
+
+  <div class="max-w-4xl mx-auto px-4 py-10">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="mb-4 p-4 rounded-lg bg-slate-900 text-white">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <div class="bg-white shadow rounded-xl p-6">
+      <h1 class="text-2xl font-bold text-slate-900 mb-1">{{ patient.user.get_full_name }}</h1>
+      <p class="text-sm text-slate-600 mb-6">Create an appointment and auto-create a pending session payment.</p>
+
+      <form method="post" class="grid md:grid-cols-2 gap-4">
+        {% csrf_token %}
+        <div class="md:col-span-2">
+          <label class="block text-sm font-semibold text-slate-900 mb-2">Clinician</label>
+          <select name="therapist_id" class="w-full border border-slate-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-700" required>
+            <option value="">Select...</option>
+            {% for t in therapists %}
+              <option value="{{ t.id }}">{{ t.get_full_name|default:t.username }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-slate-900 mb-2">Date</label>
+          <input name="appointment_date" type="date" class="w-full border border-slate-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-700" required />
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-slate-900 mb-2">Time</label>
+          <input name="appointment_time" type="time" class="w-full border border-slate-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-700" required />
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm font-semibold text-slate-900 mb-2">Notes (optional)</label>
+          <textarea name="notes" rows="3" class="w-full border border-slate-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-700"></textarea>
+        </div>
+        <div class="md:col-span-2 flex justify-end">
+          <button class="bg-purple-700 hover:bg-purple-800 text-white font-semibold px-6 py-3 rounded-lg transition">Create appointment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

@@ -2,21 +2,21 @@
 
 {% block content %}
 
-<div class="min-h-screen bg-slate-50">
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
     <!-- Navigation Bar -->
-    <nav class="bg-white shadow-sm sticky top-0 z-40">
+    <nav class="bg-white shadow-md sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 bg-blue-900 rounded-full flex items-center justify-center">
-                        <span class="text-white font-bold">N</span>
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 bg-purple-700 rounded-full flex items-center justify-center">
+                        <span class="text-white font-bold">K</span>
                     </div>
-                    <h1 class="text-xl font-bold text-blue-900">NAPH Clinic</h1>
+                    <h1 class="text-xl font-bold text-slate-900">KEWOTA</h1>
                 </div>
                 <div class="flex items-center gap-4">
                     <span class="text-slate-600">Welcome, <strong>{{ user.first_name }}</strong></span>
-                    <a href="{% url 'patient_profile' %}" class="text-slate-600 hover:text-blue-900">Profile</a>
-                    <a href="{% url 'patient_logout' %}" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">Logout</a>
+                    <a href="{% url 'patient_profile' %}" class="text-slate-600 hover:text-purple-700 font-medium">Profile</a>
+                    <a href="{% url 'patient_logout' %}" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 font-medium">Logout</a>
                 </div>
             </div>
         </div>
@@ -34,29 +34,29 @@
 
         <!-- Welcome Header -->
         <div class="mb-8">
-            <h2 class="text-4xl font-bold text-blue-900 mb-2">Your Therapy Portal</h2>
+            <h2 class="text-4xl font-bold text-slate-900 mb-2">Your Therapy Portal</h2>
             <p class="text-slate-600">Manage your appointments, view assessments, and track your progress</p>
         </div>
 
         <!-- Next Appointment Card -->
         {% if next_appointment %}
-        <div class="bg-gradient-to-r from-blue-900 to-slate-900 text-white rounded-lg p-6 mb-8 shadow-lg">
+        <div class="bg-gradient-to-r from-purple-700 to-purple-900 text-white rounded-xl p-6 mb-8 shadow-lg">
             <div class="flex justify-between items-start">
                 <div>
-                    <h3 class="text-sm font-semibold text-blue-100 mb-2">YOUR NEXT APPOINTMENT</h3>
+                    <h3 class="text-sm font-semibold text-purple-100 mb-2">YOUR NEXT APPOINTMENT</h3>
                     <p class="text-3xl font-bold mb-2">{{ next_appointment.appointment_date|date:"D, M d, Y" }}</p>
-                    <p class="text-blue-100">{{ next_appointment.appointment_date|time:"H:i" }} - {{ next_appointment.duration_minutes }} minutes</p>
+                    <p class="text-purple-100">{{ next_appointment.appointment_date|time:"H:i" }} - {{ next_appointment.duration_minutes }} minutes</p>
                     {% if next_appointment.therapist %}
-                        <p class="text-blue-100 mt-2">Therapist: <strong>{{ next_appointment.therapist.get_full_name }}</strong></p>
+                        <p class="text-purple-100 mt-2">Therapist: <strong>{{ next_appointment.therapist.get_full_name }}</strong></p>
                     {% endif %}
                 </div>
-                <a href="{% url 'patient_appointments' %}" class="bg-white text-blue-900 px-6 py-2 rounded-lg font-semibold hover:bg-slate-100">View All</a>
+                <a href="{% url 'patient_appointments' %}" class="bg-white text-purple-700 px-6 py-2 rounded-lg font-semibold hover:bg-slate-100">View All</a>
             </div>
         </div>
         {% else %}
-        <div class="bg-blue-50 border-2 border-blue-200 rounded-lg p-6 mb-8">
-            <p class="text-blue-900 font-semibold">📅 No upcoming appointments scheduled</p>
-            <p class="text-blue-700 text-sm mt-2">Contact us to book your next session</p>
+        <div class="bg-purple-50 border-2 border-purple-200 rounded-lg p-6 mb-8">
+            <p class="text-purple-900 font-semibold">📅 No upcoming appointments scheduled</p>
+            <p class="text-purple-700 text-sm mt-2">Contact us to book your next session</p>
         </div>
         {% endif %}
 
@@ -65,41 +65,91 @@
             <!-- Left Column -->
             <div class="lg:col-span-2 space-y-8">
                 <!-- Recent Assessments -->
-                <div class="bg-white rounded-lg shadow p-6">
+                <div class="bg-white rounded-xl shadow-md p-6">
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-2xl font-bold text-blue-900">Your Assessments</h3>
-                        <a href="{% url 'patient_assessments' %}" class="text-blue-900 hover:underline font-semibold">View All</a>
+                        <h3 class="text-2xl font-bold text-slate-900">Your Assessments</h3>
+                        <a href="{% url 'patient_assessments' %}" class="text-purple-700 hover:underline font-semibold">View All</a>
                     </div>
 
                     {% if recent_assessments %}
                         <div class="space-y-4">
                             {% for assessment in recent_assessments %}
-                            <div class="border border-slate-200 rounded-lg p-4 hover:shadow-md transition">
+                            <div class="border border-slate-200 rounded-lg p-4 hover:shadow-md hover:border-purple-200 transition">
                                 <div class="flex justify-between items-start mb-2">
                                     <h4 class="font-bold text-slate-900">{{ assessment.title }}</h4>
-                                    <span class="text-xs bg-blue-100 text-blue-900 px-3 py-1 rounded-full">
+                                    <span class="text-xs bg-purple-100 text-purple-900 px-3 py-1 rounded-full">
                                         {{ assessment.get_assessment_type_display }}
                                     </span>
                                 </div>
                                 <p class="text-sm text-slate-600 mb-3">{{ assessment.created_at|date:"M d, Y" }}</p>
                                 <p class="text-slate-700 text-sm line-clamp-2">{{ assessment.content }}</p>
-                                <a href="{% url 'assessment_detail' assessment.id %}" class="text-blue-900 hover:underline text-sm font-semibold mt-2 inline-block">Read Full Assessment →</a>
+                                <a href="{% url 'assessment_detail' assessment.id %}" class="text-purple-700 hover:underline text-sm font-semibold mt-2 inline-block">Read Full Assessment →</a>
                             </div>
                             {% endfor %}
                         </div>
                     {% else %}
                         <p class="text-slate-500">No assessments yet. Your therapist will share feedback after your sessions.</p>
                     {% endif %}
-                </div>
+	                </div>
 
-                <!-- Upcoming Appointments Preview -->
-                <div class="bg-white rounded-lg shadow p-6">
-                    <h3 class="text-2xl font-bold text-blue-900 mb-6">Upcoming Sessions</h3>
+	                <!-- Feedback Module -->
+	                <div class="bg-white rounded-xl shadow-md p-6">
+	                    <div class="flex justify-between items-center mb-6">
+	                        <h3 class="text-2xl font-bold text-slate-900">My Feedback</h3>
+	                        <span class="text-sm text-slate-500">Guided questions</span>
+	                    </div>
+	                    {% if pending_feedback_sessions %}
+	                        <div class="space-y-3">
+	                            {% for s in pending_feedback_sessions %}
+	                                <div class="border border-slate-200 rounded-lg p-4 flex items-center justify-between gap-4">
+	                                    <div>
+	                                        <p class="font-semibold text-slate-900">Session #{{ s.id }}</p>
+	                                        <p class="text-sm text-slate-600">{{ s.session_date|date:"M d, Y" }}</p>
+	                                    </div>
+	                                    <a href="{% url 'patient_feedback' s.id %}" class="bg-purple-700 hover:bg-purple-800 text-white font-semibold px-4 py-2 rounded-lg transition">
+	                                        Fill feedback
+	                                    </a>
+	                                </div>
+	                            {% endfor %}
+	                        </div>
+	                    {% else %}
+	                        <p class="text-slate-500">No pending feedback at the moment.</p>
+	                    {% endif %}
+	                </div>
+
+	                <!-- Payment Module -->
+	                <div class="bg-white rounded-xl shadow-md p-6">
+	                    <div class="flex justify-between items-center mb-6">
+	                        <h3 class="text-2xl font-bold text-slate-900">Payments</h3>
+	                        <a href="{% url 'patient_payments' %}" class="text-purple-700 hover:underline font-semibold">View All</a>
+	                    </div>
+	                    {% if pending_payment_sessions %}
+	                        <div class="space-y-3">
+	                            {% for s in pending_payment_sessions %}
+	                                <div class="border border-slate-200 rounded-lg p-4 flex items-center justify-between gap-4">
+	                                    <div>
+	                                        <p class="font-semibold text-slate-900">Session #{{ s.id }}</p>
+	                                        <p class="text-sm text-slate-600">{{ s.amount }} {{ s.currency }} • {{ s.payment_status|title }}</p>
+	                                    </div>
+	                                    <a href="{% url 'mpesa_pay_session' s.id %}" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-lg transition">
+	                                        Pay M-PESA
+	                                    </a>
+	                                </div>
+	                            {% endfor %}
+	                        </div>
+	                    {% else %}
+	                        <p class="text-slate-500">No pending payments.</p>
+	                    {% endif %}
+	                </div>
+	
+	                <!-- Upcoming Appointments Preview -->
+	                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-2xl font-bold text-slate-900 mb-6">Upcoming Sessions</h3>
 
                     {% if upcoming_appointments %}
                         <div class="space-y-4">
                             {% for appointment in upcoming_appointments %}
-                            <div class="border-l-4 border-green-500 bg-green-50 p-4 rounded">
+                            <div class="border-l-4 border-purple-500 bg-purple-50 p-4 rounded">
                                 <div class="flex justify-between items-start">
                                     <div>
                                         <p class="font-bold text-slate-900">{{ appointment.appointment_date|date:"D, M d" }}</p>
@@ -108,7 +158,7 @@
                                             <p class="text-sm text-slate-700 mt-1">With <strong>{{ appointment.therapist.get_full_name }}</strong></p>
                                         {% endif %}
                                     </div>
-                                    <span class="text-green-700 font-semibold">Scheduled</span>
+                                    <span class="text-purple-700 font-semibold">Scheduled</span>
                                 </div>
                             </div>
                             {% endfor %}
@@ -122,12 +172,13 @@
             <!-- Right Sidebar -->
             <div class="space-y-6">
                 <!-- Quick Actions -->
-                <div class="bg-white rounded-lg shadow p-6">
-                    <h3 class="text-lg font-bold text-blue-900 mb-4">Quick Actions</h3>
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-lg font-bold text-slate-900 mb-4">Quick Actions</h3>
                     <div class="space-y-2">
-                        <a href="{% url 'booking_calendar' %}" class="block w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 text-center font-semibold">✨ Book Appointment</a>
-                        <a href="{% url 'patient_profile' %}" class="block w-full bg-slate-100 text-slate-900 py-2 px-4 rounded-lg hover:bg-slate-200 text-center font-semibold">👤 My Profile</a>
-                        <a href="{% url 'patient_assessments' %}" class="block w-full bg-slate-100 text-slate-900 py-2 px-4 rounded-lg hover:bg-slate-200 text-center font-semibold">📋 All Assessments</a>
+                        <a href="{% url 'booking_calendar' %}" class="block w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 text-center font-semibold transition">✨ Book Appointment</a>
+                        <a href="{% url 'patient_payments' %}" class="block w-full bg-purple-700 text-white py-2 px-4 rounded-lg hover:bg-purple-800 text-center font-semibold transition">💳 Payments</a>
+                        <a href="{% url 'patient_profile' %}" class="block w-full bg-slate-200 text-slate-900 py-2 px-4 rounded-lg hover:bg-slate-300 text-center font-semibold transition">👤 My Profile</a>
+                        <a href="{% url 'patient_assessments' %}" class="block w-full bg-slate-200 text-slate-900 py-2 px-4 rounded-lg hover:bg-slate-300 text-center font-semibold transition">📋 All Assessments</a>
                     </div>
                 </div>
 
@@ -146,12 +197,12 @@
                 {% endif %}
 
                 <!-- Session Summary Card -->
-                <div class="bg-white rounded-lg shadow p-6">
-                    <h3 class="text-lg font-bold text-blue-900 mb-4">📊 Your Progress</h3>
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-lg font-bold text-slate-900 mb-4">📊 Your Progress</h3>
                     <div class="space-y-3">
                         <div>
                             <p class="text-sm text-slate-600">Total Sessions</p>
-                            <p class="text-2xl font-bold text-blue-900">{{ session_history|length }}</p>
+                            <p class="text-2xl font-bold text-purple-700">{{ session_history|length }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-slate-600">Assessments Shared</p>
@@ -161,11 +212,11 @@
                 </div>
 
                 <!-- Contact Card -->
-                <div class="bg-blue-50 rounded-lg p-6 border border-blue-200">
-                    <h3 class="text-lg font-bold text-blue-900 mb-3">📞 Need Help?</h3>
-                    <p class="text-sm text-blue-800 mb-3">Contact us directly to reschedule or discuss your care.</p>
-                    <p class="text-sm font-semibold text-blue-900">P.O. Box 40166-00100</p>
-                    <p class="text-sm text-blue-800">Nairobi, Kenya</p>
+                <div class="bg-purple-50 rounded-lg p-6 border border-purple-200">
+                    <h3 class="text-lg font-bold text-slate-900 mb-3">📞 Need Help?</h3>
+                    <p class="text-sm text-slate-700 mb-3">Contact us directly to reschedule or discuss your care.</p>
+                    <p class="text-sm font-semibold text-slate-900">P.O. Box 40166-00100</p>
+                    <p class="text-sm text-slate-700">Nairobi, Kenya</p>
                 </div>
             </div>
         </div>

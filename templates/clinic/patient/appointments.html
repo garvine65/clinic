@@ -2,13 +2,13 @@
 
 {% block content %}
 
-<div class="min-h-screen bg-slate-50">
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
     <!-- Navigation -->
     <nav class="bg-white shadow-sm sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center gap-8">
-                    <a href="{% url 'patient_dashboard' %}" class="text-slate-600 hover:text-blue-900">← Back to Dashboard</a>
+                    <a href="{% url 'patient_dashboard' %}" class="text-slate-600 hover:text-purple-700 font-medium">← Back to Dashboard</a>
                 </div>
                 <div class="flex items-center gap-4">
                     <a href="{% url 'patient_logout' %}" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">Logout</a>
@@ -18,11 +18,11 @@
     </nav>
 
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h2 class="text-4xl font-bold text-blue-900 mb-8">My Appointments</h2>
+        <h2 class="text-4xl font-bold text-slate-900 mb-8">My Appointments</h2>
 
         <!-- Upcoming Appointments -->
-        <div class="bg-white rounded-lg shadow mb-8">
-            <div class="bg-gradient-to-r from-green-500 to-green-600 text-white p-6 rounded-t-lg">
+        <div class="bg-white rounded-xl shadow-md mb-8">
+            <div class="bg-gradient-to-r from-purple-700 to-purple-900 text-white p-6 rounded-t-xl">
                 <h3 class="text-2xl font-bold">📅 Upcoming Appointments</h3>
             </div>
             <div class="p-6">
@@ -52,15 +52,15 @@
                 {% else %}
                     <div class="text-center py-8">
                         <p class="text-slate-500 text-lg mb-4">No upcoming appointments scheduled</p>
-                        <a href="{% url 'booking_calendar' %}" class="inline-block bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 font-semibold">Book an Appointment</a>
+                        <a href="{% url 'booking_calendar' %}" class="inline-block bg-purple-700 text-white px-6 py-2 rounded-lg hover:bg-purple-800 font-semibold transition">Book an Appointment</a>
                     </div>
                 {% endif %}
             </div>
         </div>
 
         <!-- Past Appointments -->
-        <div class="bg-white rounded-lg shadow">
-            <div class="bg-gradient-to-r from-blue-900 to-slate-900 text-white p-6 rounded-t-lg">
+        <div class="bg-white rounded-xl shadow-md">
+            <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-6 rounded-t-xl">
                 <h3 class="text-2xl font-bold">📋 Past Sessions</h3>
             </div>
             <div class="p-6">

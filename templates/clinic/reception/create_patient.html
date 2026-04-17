@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Create Client - Reception{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+  <nav class="bg-white shadow-sm sticky top-0 z-40">
+    <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 bg-purple-700 rounded-full flex items-center justify-center text-white font-bold">K</div>
+        <div>
+          <p class="text-xs text-slate-500">KEWOTA</p>
+          <p class="text-lg font-bold text-slate-900">Create Client</p>
+        </div>
+      </div>
+      <a href="{% url 'reception_patients' %}" class="text-purple-700 font-semibold hover:underline">Back</a>
+    </div>
+  </nav>
+
+  <div class="max-w-4xl mx-auto px-4 py-10">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="mb-4 p-4 rounded-lg bg-slate-900 text-white">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <div class="bg-white shadow rounded-xl p-6">
+      <form method="post" class="grid md:grid-cols-2 gap-4">
+        {% csrf_token %}
+        <div>
+          <label class="block text-sm font-semibold text-slate-900 mb-2">First name</label>
+          <input name="first_name" class="w-full border border-slate-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-700" required />
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-slate-900 mb-2">Last name</label>
+          <input name="last_name" class="w-full border border-slate-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-700" required />
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm font-semibold text-slate-900 mb-2">Email</label>
+          <input name="email" type="email" class="w-full border border-slate-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-700" required />
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-slate-900 mb-2">Phone</label>
+          <input name="phone_number" class="w-full border border-slate-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-700" placeholder="2547XXXXXXXX" />
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-slate-900 mb-2">Temporary password</label>
+          <input name="password" type="password" class="w-full border border-slate-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-700" minlength="8" required />
+        </div>
+        <div class="md:col-span-2 flex justify-end">
+          <button class="bg-purple-700 hover:bg-purple-800 text-white font-semibold px-6 py-3 rounded-lg transition">Create client</button>
+        </div>
+      </form>
+      <p class="text-xs text-slate-500 mt-4">Share the temporary password securely with the client.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

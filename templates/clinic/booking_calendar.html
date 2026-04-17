@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}Book an Appointment - NAPH Clinic{% endblock %}
+{% block title %}Book an Appointment - KEWOTA{% endblock %}
 
 {% block content %}
-<div class="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
     <!-- Navigation Bar -->
     <nav class="bg-white shadow-md">
         <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-            <h1 class="text-2xl font-bold text-blue-900">NAPH Clinic</h1>
+            <h1 class="text-2xl font-bold text-slate-900">KEWOTA</h1>
             <div class="flex items-center gap-4">
                 <span class="text-gray-700">Welcome, <strong>{{ user.first_name }}</strong></span>
                 <a href="{% url 'patient_logout' %}" class="text-red-500 hover:text-red-700 font-semibold">Logout</a>
@@ -18,7 +18,7 @@
     <div class="max-w-6xl mx-auto px-4 py-8">
         <!-- Header -->
         <div class="mb-8">
-            <h2 class="text-4xl font-bold text-blue-900 mb-2">Book an Appointment</h2>
+            <h2 class="text-4xl font-bold text-slate-900 mb-2">Book an Appointment</h2>
             <p class="text-gray-600">Select a therapist and choose your preferred time slot. Sessions are 50 minutes at Ksh 2,500 each.</p>
         </div>
 
@@ -31,11 +31,69 @@
             {% endfor %}
         {% endif %}
 
+        <!-- Calendar Section -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-2xl font-bold text-slate-900">Appointments: Scheduled / Completed</h3>
+                <div class="flex gap-2">
+                    <button class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded transition">&larr;</button>
+                    <span class="px-4 py-2 font-semibold text-slate-900">{{ month_name }}</span>
+                    <button class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded transition">&rarr;</button>
+                </div>
+            </div>
+
+            <!-- Calendar Grid -->
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="border p-3 text-center font-semibold text-gray-700 w-16">Sun</th>
+                            <th class="border p-3 text-center font-semibold text-gray-700 w-16">Mon</th>
+                            <th class="border p-3 text-center font-semibold text-gray-700 w-16">Tue</th>
+                            <th class="border p-3 text-center font-semibold text-gray-700 w-16">Wed</th>
+                            <th class="border p-3 text-center font-semibold text-gray-700 w-16">Thu</th>
+                            <th class="border p-3 text-center font-semibold text-gray-700 w-16">Fri</th>
+                            <th class="border p-3 text-center font-semibold text-gray-700 w-16">Sat</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for week in calendar_data %}
+                            <tr>
+                                {% for day_info in week %}
+                                    <td class="border p-3 h-24 align-top bg-gray-50">
+                                        {% if day_info.day %}
+                                            <div class="relative h-full">
+                                                <div class="text-sm font-semibold text-gray-700 mb-1">{{ day_info.day }}</div>
+                                                {% if day_info.is_scheduled %}
+                                                    <div class="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
+                                                        <span class="text-3xl font-bold">✓</span>
+                                                    </div>
+                                                    <span class="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded mt-2">Scheduled</span>
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Legend -->
+            <div class="mt-6 flex gap-6 justify-center">
+                <div class="flex items-center gap-2">
+                    <span class="inline-block px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded">Scheduled</span>
+                    <span class="text-sm text-gray-600">Appointment booked</span>
+                </div>
+            </div>
+        </div>
+
         <!-- Therapists Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             {% for therapist_id, info in booking_info.items %}
                 <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition overflow-hidden">
-                    <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-4">
+                    <div class="bg-gradient-to-r from-purple-700 to-purple-900 p-4">
                         <h3 class="text-xl font-bold text-white">
                             {% for therapist in therapists %}
                                 {% if therapist.id == therapist_id %}
@@ -44,7 +102,7 @@
                             {% endfor %}
                         </h3>
                         {% if info.profile %}
-                            <p class="text-blue-100 text-sm">{{ info.profile.specialization }}</p>
+                            <p class="text-purple-100 text-sm">{{ info.profile.specialization }}</p>
                         {% endif %}
                     </div>
 
@@ -63,7 +121,7 @@
                         <div class="mb-4">
                             <div class="flex items-center gap-2">
                                 <span class="text-sm text-gray-600">Current Bookings:</span>
-                                <span class="inline-block bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">
+                                <span class="inline-block bg-purple-100 text-purple-900 px-3 py-1 rounded-full text-sm font-semibold">
                                     {{ info.bookings_count }} booked today
                                 </span>
                             </div>
@@ -82,7 +140,7 @@
 
                         <!-- Book Button -->
                         <a href="{% url 'create_booking' %}?therapist_id={{ therapist_id }}" 
-                           class="w-full block text-center bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-2 px-4 rounded-lg transition transform hover:scale-105">
+                           class="w-full block text-center bg-gradient-to-r from-purple-700 to-purple-800 hover:from-purple-800 hover:to-purple-900 text-white font-bold py-2 px-4 rounded-lg transition transform hover:scale-105">
                             Book with this Therapist
                         </a>
                     </div>
@@ -96,10 +154,10 @@
 
         <!-- Info Section -->
         <div class="bg-white rounded-lg shadow-md p-8 mb-8">
-            <h3 class="text-2xl font-bold text-blue-900 mb-4">How Our Booking Works</h3>
+            <h3 class="text-2xl font-bold text-slate-900 mb-4">How Our Booking Works</h3>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="text-center">
-                    <div class="text-4xl font-bold text-blue-500 mb-2">1</div>
+                    <div class="text-4xl font-bold text-purple-600 mb-2">1</div>
                     <h4 class="font-bold text-gray-800 mb-2">Select a Therapist</h4>
                     <p class="text-gray-600">Choose from our qualified therapists based on their specialization</p>
                 </div>
@@ -118,7 +176,7 @@
 
         <!-- Quick Links -->
         <div class="flex gap-4 mb-8">
-            <a href="{% url 'patient_dashboard' %}" class="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold transition">
+            <a href="{% url 'patient_dashboard' %}" class="px-6 py-2 bg-purple-700 hover:bg-purple-800 text-white rounded-lg font-semibold transition">
                 ← Back to Dashboard
             </a>
             <a href="{% url 'patient_appointments' %}" class="px-6 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg font-semibold transition">
@@ -127,8 +185,43 @@
         </div>
 
         <!-- Contact Info -->
-        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
-            <p class="text-gray-700"><strong>Questions about booking?</strong> Contact us at <strong>+254 700 123 456</strong> or email <strong>info@naphealth.org</strong></p>
+        <div class="bg-purple-50 border-l-4 border-purple-500 p-4 rounded">
+            <p class="text-slate-700"><strong>Questions about booking?</strong> Contact us at <strong>+254 700 123 456</strong> or email <strong>info@kewota.org</strong></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-purple-600 mb-2">1</div>
+                    <h4 class="font-bold text-gray-800 mb-2">Select a Therapist</h4>
+                    <p class="text-gray-600">Choose from our qualified therapists based on their specialization</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-green-500 mb-2">2</div>
+                    <h4 class="font-bold text-gray-800 mb-2">Choose Your Time</h4>
+                    <p class="text-gray-600">Pick a date and time that works best for you from available slots</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-purple-500 mb-2">3</div>
+                    <h4 class="font-bold text-gray-800 mb-2">Confirm Booking</h4>
+                    <p class="text-gray-600">Get instant confirmation and receive reminder notifications</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="flex gap-4 mb-8">
+            <a href="{% url 'patient_dashboard' %}" class="px-6 py-2 bg-purple-700 hover:bg-purple-800 text-white rounded-lg font-semibold transition">
+                ← Back to Dashboard
+            </a>
+            <a href="{% url 'patient_appointments' %}" class="px-6 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg font-semibold transition">
+                View My Appointments
+            </a>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="bg-purple-50 border-l-4 border-purple-500 p-4 rounded">
+            <p class="text-slate-700"><strong>Questions about booking?</strong> Contact us at <strong>+254 700 123 456</strong> or email <strong>info@kewota.org</strong></p>
         </div>
     </div>
 </div>

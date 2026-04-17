@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+import uuid
 
 # ============= PATIENT PROFILE =============
 class PatientProfile(models.Model):
@@ -111,7 +112,7 @@ class SessionRecord(models.Model):
     
     patient = models.ForeignKey(PatientProfile, on_delete=models.CASCADE, related_name='session_records')
     appointment = models.OneToOneField(Appointment, on_delete=models.CASCADE, related_name='session_record')
-    session_date = models.DateTimeField(auto_now_add=True)
+    session_date = models.DateTimeField(default=timezone.now)
     therapist = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, 
                                   related_name='conducted_sessions')
     
@@ -234,3 +235,106 @@ class Document(models.Model):
         ordering = ['document_type']
         verbose_name = "Downloadable Document"
         verbose_name_plural = "Downloadable Documents"
+
+
+# ============= PATIENT FEEDBACK =============
+class FeedbackQuestion(models.Model):
+    """Guided feedback questions shown to patients after sessions."""
+
+    SCALE_1_TO_5 = "scale_1_5"
+    QUESTION_TYPE_CHOICES = [
+        (SCALE_1_TO_5, "Scale (1-5)"),
+    ]
+
+    prompt = models.CharField(max_length=255)
+    question_type = models.CharField(max_length=20, choices=QUESTION_TYPE_CHOICES, default=SCALE_1_TO_5)
+    sort_order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.prompt
+
+    class Meta:
+        ordering = ["sort_order", "id"]
+
+
+class FeedbackSubmission(models.Model):
+    """A patient's feedback submission for a specific session."""
+
+    patient = models.ForeignKey(PatientProfile, on_delete=models.CASCADE, related_name="feedback_submissions")
+    session_record = models.OneToOneField(
+        SessionRecord, on_delete=models.CASCADE, related_name="feedback_submission", null=True, blank=True
+    )
+    appointment = models.ForeignKey(
+        Appointment, on_delete=models.CASCADE, related_name="feedback_submissions", null=True, blank=True
+    )
+    comment = models.TextField(blank=True)
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        target = self.session_record_id or self.appointment_id
+        return f"{self.patient.user.get_full_name()} - Feedback ({target})"
+
+    class Meta:
+        ordering = ["-submitted_at"]
+
+
+class FeedbackAnswer(models.Model):
+    """An answer to a guided feedback question."""
+
+    submission = models.ForeignKey(FeedbackSubmission, on_delete=models.CASCADE, related_name="answers")
+    question = models.ForeignKey(FeedbackQuestion, on_delete=models.PROTECT, related_name="answers")
+    rating_1_5 = models.PositiveSmallIntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Answer: {self.question_id} -> {self.rating_1_5}"
+
+    class Meta:
+        unique_together = ("submission", "question")
+
+
+# ============= M-PESA PAYMENTS =============
+class PaymentTransaction(models.Model):
+    """Tracks M-PESA payment requests and callbacks for a session."""
+
+    STATUS_INITIATED = "initiated"
+    STATUS_PENDING = "pending"
+    STATUS_SUCCESS = "success"
+    STATUS_FAILED = "failed"
+    STATUS_CANCELED = "canceled"
+    STATUS_CHOICES = [
+        (STATUS_INITIATED, "Initiated"),
+        (STATUS_PENDING, "Pending"),
+        (STATUS_SUCCESS, "Success"),
+        (STATUS_FAILED, "Failed"),
+        (STATUS_CANCELED, "Canceled"),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    session_record = models.ForeignKey(SessionRecord, on_delete=models.CASCADE, related_name="payment_transactions")
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="created_payments")
+
+    phone_number = models.CharField(max_length=20, blank=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    currency = models.CharField(max_length=3, default="KES")
+
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=STATUS_INITIATED)
+    account_reference = models.CharField(max_length=64, blank=True)
+    description = models.CharField(max_length=128, blank=True)
+
+    merchant_request_id = models.CharField(max_length=64, blank=True)
+    checkout_request_id = models.CharField(max_length=64, blank=True, db_index=True)
+    mpesa_receipt_number = models.CharField(max_length=64, blank=True)
+    result_code = models.IntegerField(null=True, blank=True)
+    result_desc = models.CharField(max_length=255, blank=True)
+    callback_payload = models.JSONField(default=dict, blank=True)
+
+    initiated_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.session_record_id} - {self.amount} {self.currency} ({self.status})"
+
+    class Meta:
+        ordering = ["-initiated_at"]

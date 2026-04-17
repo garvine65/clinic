@@ -1,7 +1,8 @@
 from django.contrib import admin
 from .models import (
-    PatientProfile, ConsultationForm, Appointment, 
-    SessionRecord, ClinicalAssessment, TherapistProfile, Document
+	    PatientProfile, ConsultationForm, Appointment, 
+	    SessionRecord, ClinicalAssessment, TherapistProfile, Document,
+	    FeedbackQuestion, FeedbackSubmission, FeedbackAnswer, PaymentTransaction
 )
 
 # ============= PATIENT PROFILE =============
@@ -156,3 +157,35 @@ class DocumentAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
+
+
+# ============= FEEDBACK =============
+@admin.register(FeedbackQuestion)
+class FeedbackQuestionAdmin(admin.ModelAdmin):
+    list_display = ("prompt", "question_type", "sort_order", "is_active")
+    list_filter = ("question_type", "is_active")
+    search_fields = ("prompt",)
+    ordering = ("sort_order", "id")
+
+
+class FeedbackAnswerInline(admin.TabularInline):
+    model = FeedbackAnswer
+    extra = 0
+
+
+@admin.register(FeedbackSubmission)
+class FeedbackSubmissionAdmin(admin.ModelAdmin):
+    list_display = ("patient", "session_record", "appointment", "submitted_at")
+    list_filter = ("submitted_at",)
+    search_fields = ("patient__user__first_name", "patient__user__last_name", "comment")
+    readonly_fields = ("submitted_at",)
+    inlines = (FeedbackAnswerInline,)
+
+
+# ============= PAYMENTS =============
+@admin.register(PaymentTransaction)
+class PaymentTransactionAdmin(admin.ModelAdmin):
+    list_display = ("session_record", "amount", "phone_number", "status", "initiated_at", "checkout_request_id")
+    list_filter = ("status", "initiated_at")
+    search_fields = ("session_record__patient__user__first_name", "session_record__patient__user__last_name", "checkout_request_id", "mpesa_receipt_number")
+    readonly_fields = ("initiated_at", "updated_at", "callback_payload")

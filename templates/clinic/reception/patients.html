@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Patients - Reception{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+  <nav class="bg-white shadow-sm sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 bg-purple-700 rounded-full flex items-center justify-center text-white font-bold">K</div>
+        <div>
+          <p class="text-xs text-slate-500">KEWOTA</p>
+          <p class="text-lg font-bold text-slate-900">Reception • Clients</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="{% url 'reception_dashboard' %}" class="text-purple-700 font-semibold hover:underline">Dashboard</a>
+        <a href="{% url 'reception_create_patient' %}" class="bg-purple-700 hover:bg-purple-800 text-white font-semibold px-4 py-2 rounded-lg transition">+ New client</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-7xl mx-auto px-4 py-10 space-y-6">
+    <form method="get" class="bg-white shadow rounded-xl p-6 flex flex-col md:flex-row gap-3">
+      <input name="search" value="{{ search_query }}" class="flex-1 border border-slate-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-700" placeholder="Search by name, email, phone..." />
+      <button class="bg-slate-900 hover:bg-slate-950 text-white font-semibold px-6 py-3 rounded-lg transition">Search</button>
+    </form>
+
+    <div class="bg-white shadow rounded-xl p-6">
+      <h2 class="text-xl font-bold text-slate-900 mb-4">Results</h2>
+      {% if patients %}
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead>
+              <tr class="text-xs uppercase text-slate-500 border-b">
+                <th class="py-3 pr-4">Client</th>
+                <th class="py-3 pr-4">Email</th>
+                <th class="py-3 pr-4">Phone</th>
+                <th class="py-3 pr-4">Joined</th>
+                <th class="py-3"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for p in patients %}
+                <tr class="border-b last:border-b-0">
+                  <td class="py-4 pr-4 font-semibold text-slate-900">{{ p.user.get_full_name }}</td>
+                  <td class="py-4 pr-4 text-slate-700">{{ p.user.email }}</td>
+                  <td class="py-4 pr-4 text-slate-700">{{ p.phone_number }}</td>
+                  <td class="py-4 pr-4 text-slate-700">{{ p.created_at|date:"M d, Y" }}</td>
+                  <td class="py-4">
+                    <a href="{% url 'reception_patient_detail' p.id %}" class="text-purple-700 font-semibold hover:underline">Open</a>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p class="text-slate-600">No clients found.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+

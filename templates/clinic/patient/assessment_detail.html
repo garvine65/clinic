@@ -2,13 +2,13 @@
 
 {% block content %}
 
-<div class="min-h-screen bg-slate-50">
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
     <!-- Navigation -->
     <nav class="bg-white shadow-sm sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center gap-8">
-                    <a href="{% url 'patient_assessments' %}" class="text-slate-600 hover:text-blue-900">← Back to Assessments</a>
+                    <a href="{% url 'patient_assessments' %}" class="text-slate-600 hover:text-purple-700">← Back to Assessments</a>
                 </div>
                 <div class="flex items-center gap-4">
                     <a href="{% url 'patient_logout' %}" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">Logout</a>
@@ -18,22 +18,22 @@
     </nav>
 
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="bg-white rounded-lg shadow">
+        <div class="bg-white rounded-xl shadow-md">
             <!-- Header -->
-            <div class="bg-gradient-to-r from-blue-900 to-slate-900 text-white p-8 rounded-t-lg">
+            <div class="bg-gradient-to-r from-purple-700 to-purple-900 text-white p-8 rounded-t-xl">
                 <div class="flex justify-between items-start mb-4">
                     <div>
                         <h1 class="text-4xl font-bold mb-2">{{ assessment.title }}</h1>
-                        <p class="text-blue-100">{{ assessment.get_assessment_type_display }}</p>
+                        <p class="text-purple-100">{{ assessment.get_assessment_type_display }}</p>
                     </div>
                     <span class="text-right">
-                        <p class="text-blue-100 text-sm">Date</p>
+                        <p class="text-purple-100 text-sm">Date</p>
                         <p class="text-2xl font-bold">{{ assessment.created_at|date:"M d, Y" }}</p>
                     </span>
                 </div>
 
                 {% if assessment.therapist %}
-                    <p class="text-blue-100 border-t border-blue-700 pt-4 mt-4">
+                    <p class="text-purple-100 border-t border-purple-600 pt-4 mt-4">
                         Prepared by: <strong>{{ assessment.therapist.get_full_name }}</strong>
                     </p>
                 {% endif %}
@@ -47,10 +47,10 @@
 
                 <!-- Actions -->
                 <div class="border-t pt-6 mt-8 flex gap-4">
-                    <button onclick="window.print()" class="flex items-center gap-2 bg-slate-100 text-slate-900 px-6 py-2 rounded-lg hover:bg-slate-200">
+                    <button onclick="window.print()" class="flex items-center gap-2 bg-slate-100 text-slate-900 px-6 py-2 rounded-lg hover:bg-slate-200 transition">
                         🖨️ Print
                     </button>
-                    <a href="{% url 'patient_assessments' %}" class="flex items-center gap-2 bg-blue-900 text-white px-6 py-2 rounded-lg hover:bg-blue-800">
+                    <a href="{% url 'patient_assessments' %}" class="flex items-center gap-2 bg-purple-700 text-white px-6 py-2 rounded-lg hover:bg-purple-800 transition">
                         ← Back to Assessments
                     </a>
                 </div>
@@ -58,16 +58,16 @@
         </div>
 
         <!-- Metadata -->
-        <div class="mt-8 bg-blue-50 rounded-lg p-6 border border-blue-200">
-            <h3 class="font-bold text-blue-900 mb-3">Assessment Details</h3>
+        <div class="mt-8 bg-purple-50 rounded-lg p-6 border border-purple-200">
+            <h3 class="font-bold text-slate-900 mb-3">Assessment Details</h3>
             <div class="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                    <p class="text-blue-700">Type</p>
-                    <p class="font-semibold text-blue-900">{{ assessment.get_assessment_type_display }}</p>
+                    <p class="text-purple-700">Type</p>
+                    <p class="font-semibold text-slate-900">{{ assessment.get_assessment_type_display }}</p>
                 </div>
                 <div>
-                    <p class="text-blue-700">Shared on</p>
-                    <p class="font-semibold text-blue-900">
+                    <p class="text-purple-700">Shared on</p>
+                    <p class="font-semibold text-slate-900">
                         {% if assessment.date_shared %}
                             {{ assessment.date_shared|date:"M d, Y" }}
                         {% else %}

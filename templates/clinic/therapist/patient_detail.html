@@ -2,13 +2,13 @@
 
 {% block content %}
 
-<div class="min-h-screen bg-slate-50">
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
     <!-- Navigation -->
     <nav class="bg-white shadow-sm sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center gap-8">
-                    <a href="{% url 'therapist_dashboard' %}" class="text-slate-600 hover:text-blue-900">← Back to Dashboard</a>
+                    <a href="{% url 'therapist_dashboard' %}" class="text-slate-600 hover:text-purple-700">← Back to Dashboard</a>
                 </div>
             </div>
         </div>
@@ -16,9 +16,9 @@
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <!-- Patient Header -->
-        <div class="bg-gradient-to-r from-blue-900 to-slate-900 text-white rounded-lg p-8 mb-8">
+        <div class="bg-gradient-to-r from-purple-700 to-purple-900 text-white rounded-lg p-8 mb-8">
             <h2 class="text-4xl font-bold mb-2">{{ patient.user.get_full_name }}</h2>
-            <p class="text-blue-100">Patient ID: #{{ patient.id }} | Member since {{ patient.created_at|date:"M d, Y" }}</p>
+            <p class="text-purple-100">Patient ID: #{{ patient.id }} | Member since {{ patient.created_at|date:"M d, Y" }}</p>
         </div>
 
         <!-- Main Content Grid -->
@@ -26,8 +26,8 @@
             <!-- Left Column -->
             <div class="lg:col-span-2 space-y-8">
                 <!-- Patient Information -->
-                <div class="bg-white rounded-lg shadow p-6">
-                    <h3 class="text-2xl font-bold text-blue-900 mb-6">📋 Patient Information</h3>
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-2xl font-bold text-slate-900 mb-6">📋 Patient Information</h3>
                     <div class="grid md:grid-cols-2 gap-6">
                         <div>
                             <p class="text-slate-600 text-sm font-semibold">Email</p>
@@ -49,10 +49,10 @@
                 </div>
 
                 <!-- Recent Assessments -->
-                <div class="bg-white rounded-lg shadow p-6">
+                <div class="bg-white rounded-xl shadow-md p-6">
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-2xl font-bold text-blue-900">📝 Clinical Assessments</h3>
-                        <a href="{% url 'therapist_patients' %}" class="text-blue-600 hover:underline font-semibold">+ New Assessment</a>
+                        <h3 class="text-2xl font-bold text-slate-900">📝 Clinical Assessments</h3>
+                        <a href="{% url 'create_assessment' patient.id %}" class="text-purple-700 hover:underline font-semibold">+ New Assessment</a>
                     </div>
 
                     {% if assessments %}
@@ -76,13 +76,13 @@
                 </div>
 
                 <!-- Session History -->
-                <div class="bg-white rounded-lg shadow p-6">
-                    <h3 class="text-2xl font-bold text-blue-900 mb-6">📊 Session History</h3>
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-2xl font-bold text-slate-900 mb-6">📊 Session History</h3>
 
                     {% if sessions %}
                         <div class="space-y-3">
                             {% for session in sessions %}
-                            <div class="border-l-4 border-blue-500 bg-blue-50 p-4 rounded">
+                            <div class="border-l-4 border-purple-500 bg-purple-50 p-4 rounded">
                                 <div class="flex justify-between items-start">
                                     <div>
                                         <p class="font-semibold text-slate-900">{{ session.session_date|date:"M d, Y H:i" }}</p>
@@ -97,6 +97,34 @@
                         <p class="text-slate-500">No sessions recorded for this patient</p>
                     {% endif %}
                 </div>
+
+                <!-- Patient Feedback -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-2xl font-bold text-blue-900 mb-6">Patient Feedback</h3>
+
+                    {% if feedback %}
+                        <div class="space-y-3">
+                            {% for f in feedback %}
+                                <div class="border border-slate-200 rounded-lg p-4">
+                                    <div class="flex items-start justify-between gap-4">
+                                        <div>
+                                            <p class="font-semibold text-slate-900">{{ f.submitted_at|date:"M d, Y H:i" }}</p>
+                                            {% if f.session_record %}
+                                                <p class="text-xs text-slate-500">Session #{{ f.session_record.id }}</p>
+                                            {% endif %}
+                                        </div>
+                                        <span class="text-xs bg-green-100 text-green-900 px-3 py-1 rounded-full font-semibold">Submitted</span>
+                                    </div>
+                                    {% if f.comment %}
+                                        <p class="text-sm text-slate-700 mt-3"><span class="font-semibold">Comment:</span> {{ f.comment }}</p>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-slate-500">No patient feedback yet</p>
+                    {% endif %}
+                </div>
             </div>
 
             <!-- Right Sidebar -->
@@ -105,9 +133,9 @@
                 <div class="bg-white rounded-lg shadow p-6">
                     <h3 class="text-lg font-bold text-blue-900 mb-4">⚙️ Actions</h3>
                     <div class="space-y-2">
-                        <button class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 text-sm font-semibold">
-                            📝 Create Assessment
-                        </button>
+                        <a href="{% url 'create_assessment' patient.id %}" class="block w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 text-sm font-semibold text-center">
+                            Create Assessment
+                        </a>
                         <button class="w-full bg-slate-100 text-slate-900 py-2 px-4 rounded-lg hover:bg-slate-200 text-sm font-semibold">
                             📅 View Appointments
                         </button>

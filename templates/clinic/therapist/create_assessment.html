@@ -2,23 +2,23 @@
 
 {% block content %}
 
-<div class="min-h-screen bg-slate-50">
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
     <!-- Navigation -->
     <nav class="bg-white shadow-sm sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center gap-8">
-                    <a href="{% url 'therapist_dashboard' %}" class="text-slate-600 hover:text-blue-900">← Back to Dashboard</a>
+                    <a href="{% url 'therapist_dashboard' %}" class="text-slate-600 hover:text-purple-700">← Back to Dashboard</a>
                 </div>
             </div>
         </div>
     </nav>
 
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="bg-white rounded-lg shadow">
-            <div class="bg-gradient-to-r from-blue-900 to-slate-900 text-white p-8 rounded-t-lg">
+        <div class="bg-white rounded-xl shadow-md">
+            <div class="bg-gradient-to-r from-purple-700 to-purple-900 text-white p-8 rounded-t-xl">
                 <h2 class="text-3xl font-bold mb-2">Create Clinical Assessment</h2>
-                <p class="text-blue-100">Patient: {{ patient.user.get_full_name }}</p>
+                <p class="text-purple-100">Patient: {{ patient.user.get_full_name }}</p>
             </div>
 
             <form method="POST" class="p-8 space-y-6">
@@ -28,7 +28,7 @@
                 <div>
                     <label for="assessment_type" class="block text-sm font-semibold text-slate-900 mb-2">Assessment Type</label>
                     <select id="assessment_type" name="assessment_type" required
-                        class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-900">
+                        class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-700 focus:border-transparent">
                         <option value="">Select assessment type...</option>
                         <option value="feedback">Session Feedback</option>
                         <option value="assessment">Clinical Assessment</option>
@@ -41,20 +41,20 @@
                 <div>
                     <label for="title" class="block text-sm font-semibold text-slate-900 mb-2">Title</label>
                     <input type="text" id="title" name="title" required placeholder="e.g., Session 5 Feedback"
-                        class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-900">
+                        class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-700 focus:border-transparent">
                 </div>
 
                 <!-- Content -->
                 <div>
                     <label for="content" class="block text-sm font-semibold text-slate-900 mb-2">Assessment Content</label>
                     <textarea id="content" name="content" required rows="10" placeholder="Write your assessment here..."
-                        class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-900"></textarea>
+                        class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-700 focus:border-transparent"></textarea>
                 </div>
 
                 <!-- Visibility Toggle -->
-                <div class="flex items-center gap-3 bg-blue-50 p-4 rounded-lg">
+                <div class="flex items-center gap-3 bg-purple-50 p-4 rounded-lg">
                     <input type="checkbox" id="is_visible_to_patient" name="is_visible_to_patient" checked
-                        class="w-4 h-4 text-blue-900 border-slate-300 rounded">
+                        class="w-4 h-4 text-purple-700 border-slate-300 rounded">
                     <label for="is_visible_to_patient" class="text-sm font-semibold text-slate-900">
                         Share this assessment with the patient
                     </label>
@@ -62,10 +62,10 @@
 
                 <!-- Submit Button -->
                 <div class="flex gap-4">
-                    <button type="submit" class="bg-blue-900 text-white px-8 py-3 rounded-lg hover:bg-blue-800 font-semibold">
+                    <button type="submit" class="bg-purple-700 text-white px-8 py-3 rounded-lg hover:bg-purple-800 font-semibold transition">
                         ✓ Save Assessment
                     </button>
-                    <a href="{% url 'patient_detail' patient.id %}" class="bg-slate-300 text-slate-900 px-8 py-3 rounded-lg hover:bg-slate-400 font-semibold">
+                    <a href="{% url 'patient_detail' patient.id %}" class="bg-slate-300 text-slate-900 px-8 py-3 rounded-lg hover:bg-slate-400 font-semibold transition">
                         ✕ Cancel
                     </a>
                 </div>
